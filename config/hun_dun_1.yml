@@ -1,0 +1,73 @@
+strategy_name: "hundun_1"
+stock_list_path: "e:/resources/stock_list/stock_table_2013_10_01.txt"
+
+resource_path: "e:/resources"
+hun_dun: "e:/hun_dun"
+
+raw_data: "e:/raw_data"
+log_path: "e:/log/small_fish.log"
+log_folder: "e:/log"
+daily_k_one_day_folder: "e:/daily_k_one_day"
+
+single_signal: "e:/single_signal"
+single_signal_statistic: "e:/single_signal_statistic"
+win_lost: "e:/win_lost"
+
+hundun_1:
+  path: "e:/hun_dun"
+  data_process_path: "data_process"
+  raw_data: "e:/hun_dun/raw_data"
+  end_date: "2012-12-30"
+  signal_path: "signal"
+  win_lost_path: "win_lost"
+  buy_record: "buy_list"
+  report: "report"
+  win_expect: "percent_2_in_num_3_days"
+  count_freq: "count_10_percent_90"
+  log: "e:/log"
+  daily_k_path: "e:/daily_k"
+
+macd_1_day: 1
+macd_2_day: 2
+macd_3_day: 3
+macd_4_day: 4
+macd_5_day: 5
+macd_10_day: 10
+macd_20_day: 20
+macd_30_day: 30
+macd_60_day: 60
+macd_100_day: 100
+macd_120_day: 120
+macd_200_day: 200
+
+price_1_day: 1
+price_2_day: 2
+price_3_day: 3
+price_4_day: 4
+price_5_day: 5
+price_10_day: 10
+price_20_day: 20
+price_30_day: 30
+price_60_day: 60
+price_100_day: 100
+price_120_day: 120
+price_200_day: 200
+
+volume_1_day: 1
+volume_2_day: 2
+volume_3_day: 3
+volume_4_day: 4
+volume_5_day: 5
+volume_10_day: 10
+volume_20_day: 20
+volume_30_day: 30
+volume_60_day: 60
+volume_100_day: 100
+volume_120_day: 120
+volume_120_day: 200
+
+#一买和一卖策略
+buy_sell_number: one_buy_one_sell
+
+#止损
+maxim_lost_percent: 7
