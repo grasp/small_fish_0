@@ -32,18 +32,18 @@ end
 
 
  
-def generate_win_lost(target_folder,symbol,percent,number_day)
+def generate_win_lost(stragey,target_folder,symbol,percent,number_day)
 
-	price_hash=get_price_hash_from_history(symbol)
+	price_hash=get_price_hash_from_history(stragey,symbol)
 	price_array=price_hash.to_a
 	size=price_hash.size
 
-  #  win_lost_folder=File.expand_path("./win_lost/percent_#{(percent*100).to_i}_num_#{number_day}_days","#{AppSettings.resource_path}")
-   # win_lost_folder=File.expand_path("./percent_#{(percent).to_i}_num_#{number_day}_days/win_lost_history","#{AppSettings.hun_dun}")
-    raise  unless File.exists?(target_folder)
 
-    file_path="#{target_folder}/#{symbol}.txt"
 
+    file_path=File.expand_path("./#{target_folder}/#{symbol}.txt",$win_lost_path)
+   # puts "file_path=#{file_path}"
+
+   # raise  unless File.exists?(file_path)
     win_lost_file=File.new(file_path,"w+")
 
     price_array.each_index do |back_day|
@@ -56,46 +56,50 @@ def generate_win_lost(target_folder,symbol,percent,number_day)
     win_lost_file.close
 end
 
-def genereate_all_symbol_win_lost(target_folder,percent,number_day)
+def genereate_all_symbol_win_lost(strategy_name,target_folder,percent,number_day)
 	count=0
-
 	$all_stock_list.keys.each do |symbol|
 		count+=1		
-		stock_file_path=File.expand_path("./history_daily_data/#{symbol}.txt","#{AppSettings.raw_data}")
+		stock_file_path=File.expand_path("./history_daily_data/#{symbol}.txt","#{AppSettings.send(strategy_name).raw_data}")
 		if File.exists?(stock_file_path)
-            puts "#{symbol},#{count}"
-	    	generate_win_lost(target_folder,symbol,percent,number_day)
+        puts "#{symbol},#{count}"
+	    	generate_win_lost(strategy_name,target_folder,symbol,percent,number_day)
 	    end
 	end
 end
 
 
 #判断那些组合
-def generate_all_zuhe(target_folder)
-#	percent_array=[0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1]
-#	number_day=[1,2,3,4,5,6,7,8,9,10]
-	#percent_array=[0.01,0.03,0.05,0.07,0.09]
-	percent_array=[1,3,5,7,9]
-	number_day=[1,3,5,7,9]
+def generate_all_zuhe(strategy_name)
+	percent_array=[0.5,1,1.5,2,2.5,3]
+	number_day=[2,3,4,5,6,7]
+
 
 	percent_array.each do |percent|
 		number_day.each do |num_day|
-			genereate_all_symbol_win_lost(target_folder,percent,num_day)
+       target_sub_folder="percent_#{(percent*10).to_i}_num_#{num_day}"
+
+         sub_folder=File.expand_path(target_sub_folder,$win_lost_path)
+         Dir.mkdir(sub_folder) unless File.exists?(sub_folder)
+			genereate_all_symbol_win_lost(strategy_name,target_sub_folder,percent,num_day)
 		end
     end
 end
 
 
 if $0==__FILE__
-    daily_k_path=AppSettings.daily_k_one_day_folder
-    profit_percent=3
-    during_days=7
-    win_percent=80
-    win_count=7
-    statistic_end_date="2013-12-31"
+  
+   strategy_name="hundun_1"
+      init_strategy_name(strategy_name)
+   # daily_k_path=AppSettings.daily_k_one_day_folder
+   # profit_percent=3
+   # during_days=7
+   # win_percent=80
+   # win_count=7
+   # statistic_end_date="2013-12-31"
 
-target_folder=File.expand_path("./percent_#{profit_percent}_num_#{during_days}_days/win_lost_history",daily_k_path)
-genereate_all_symbol_win_lost(target_folder,profit_percent,during_days.to_i)
-#generate_all_zuhe
+#target_folder=File.expand_path("./percent_#{profit_percent}_num_#{during_days}_days/win_lost_history",daily_k_path)
+#genereate_all_symbol_win_lost(target_folder,profit_percent,during_days.to_i)
+generate_all_zuhe(strategy_name)
 
 end

@@ -9,7 +9,7 @@ def save_analysis_result(straty_name,symbol)
     result_file_path=File.expand_path("./#{symbol}.txt",$data_process_path)
     #analysis_result_file=File.new("#{symbol}.txt","w+")
     #puts result_file_path
-    price_hash=get_price_hash_from_history(symbol)
+    price_hash=get_price_hash_from_history(straty_name,symbol)
     
     #倒序存放，方便append
     price_array=price_hash.to_a.reverse

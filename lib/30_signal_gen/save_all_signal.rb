@@ -13,7 +13,7 @@ def save_all_signal_to_file(strategy_name,symbol)
      processed_data_array=read_full_data_process_file(strategy_name,symbol)
     
      #获取完成的价格hash
-      price_hash=get_price_hash_from_history(symbol)
+      price_hash=get_price_hash_from_history(strategy_name,symbol)
 
       #puts price_hash.to_a[1]
 

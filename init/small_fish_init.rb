@@ -7,8 +7,8 @@ def init_strategy_name(strategy)
 #load all stock list
 table_file=AppSettings.stock_list_path
 
-Dir.mkdir(AppSettings.log_folder) unless File.exists?(AppSettings.log_folder)
-$logger=Logger.new("#{AppSettings.log_path}",'daily')
+Dir.mkdir(AppSettings.send(strategy).log_folder) unless File.exists?(AppSettings.send(strategy).log_folder)
+$logger=Logger.new("#{AppSettings.send(strategy).log_path}",'daily')
 $logger.level=Logger::INFO
 
 #创建策略文件夹
