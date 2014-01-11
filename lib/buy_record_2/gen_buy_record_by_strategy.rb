@@ -83,31 +83,56 @@ def scan_signal_on_date(algorithim_path,statistic_end_date,profit_percent,durati
      File.delete(buy_record_file) if File.stat(buy_record_file).size==0
 end
 
+def scan_signal_on_date_by_strategy(strategy,date)  
+    count=0
 
-def scan_signal_on_date_by_strategy(stragegy)
-  potential_buy_folder=$
-end
+    Dir.new($counter_statistic_path).each do |symbol|
+    count+=1
+    next if symbol=="." || symbol==".."
+    symbol=symbol.gsub("\.txt","")
+    puts "count=#{count},symbol=#{symbol}"
 
-if $0==__FILE__
+    count_freq_path=File.expand_path("statistic_result/#{symbol}.txt",$count_freq)
+    signal_path=File.expand_path("#{symbol}.txt",$signal_path)
+    next unless File.exists?(signal_path)
 
- algorithim_path=AppSettings.hun_dun
- date="2013-11-13"
- statistic_end_date="2012-12-31"
- profit_percent=3
- duration=7
- win_count=25
- win_percent=99
+    raw_signal_on_date=  File.read(signal_path).match(/#{date}.*\n/).to_s.split(",")
+    buy_record_path=File.expand_path("#{date}.txt",$buy_record)
+    buy_record_file=File.new(buy_record_path,"a+")
 
- #could_buy_array= load_buy_object_into_hash("percent_3_num_7_days","win_percent_90_count_10")
-
-30.downto(1).each do |i|
-  date = Date.new(2013, 1, -i)
- # d -= (d.wday - 5) % 7
- # puts date
-  unless (date.wday==6 || date.wday==0)
-  	puts date
-   # scan_signal_on_date("percent_3_num_7_days",could_buy_array,date.to_s)
-    scan_signal_on_date(algorithim_path,statistic_end_date,profit_percent,duration,win_count,win_percent,date)
+    potential_buy_contents=File.read(count_freq_path).split("\n")
+    potential_buy_contents.each do |line|
+   # puts line
+    result=line.split("#")
+       # symbol=result[0]
+    signal_result=result[0].match(/\d+_\d+/).to_s
+    signal_index=signal_result.split("_")
+    real_signal=signal_index[0].to_s+"_"+signal_index[1].to_s+raw_signal_on_date[signal_index[0].to_i].to_s.strip+raw_signal_on_date[signal_index[1].to_i].to_s.strip
+    if real_signal==result[0]
+      buy_record_file<<symbol+"\n"
+      break
+    end
   end
 end
+end
+
+if $0==__FILE__ 
+ date="2013-11-13"
+ start=Time.now
+ strategy="hundun_2"
+ init_strategy_name(strategy)
+12.downto(1).each do |j|
+30.downto(1).each do |i|
+    next unless Date.valid_date?(2013, j, -i)
+  date = Date.new(2013, j, -i)
+
+  unless (date.wday==6 || date.wday==0)
+  	#puts date
+    scan_signal_on_date_by_strategy(strategy,date)
+  end
+end
+end
+
+puts "cost time=#{Time.now-start}"
+
 end
