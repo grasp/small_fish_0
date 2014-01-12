@@ -50,22 +50,29 @@ def calculate_file_win_by_strategy(strategy,date)
 return result
 end
 
+def calculate_all_day_in_future(strategy)
+   init_strategy_name(strategy)
+   strategy_result=File.expand_path("#{strategy}.txt",$count_freq)
+   strategy_result_file=File.new(strategy_result,"w+")
+ puts "start"
+   12.downto(1).each do |j|
+   30.downto(1).each do |i|
+    next unless Date.valid_date?(2013, j, -i)
+    date = Date.new(2013, j, -i)
+    unless (date.wday==6 || date.wday==0)
+    result=calculate_file_win_by_strategy(strategy,date)
+    puts result="#{result}"
+    strategy_result_file<<result +"\n" unless result.nil?
+   end
+ end
+end
+strategy_result_file.close
+end
+
 if $0==__FILE__
  date="2013-11-13"
  start=Time.now
  strategy="hundun_2"
  init_strategy_name(strategy)
-
- strategy_result=File.expand_path("#{strategy}.txt",$count_freq)
- strategy_result_file=File.new(strategy_result,"w+")
-12.downto(1).each do |j|
-30.downto(1).each do |i|
-   next unless Date.valid_date?(2013, j, -i)
-  date = Date.new(2013, j, -i)
-  unless (date.wday==6 || date.wday==0)
-  strategy_result_file<<calculate_file_win_by_strategy(strategy,date)+"\n"
-  end
-end
-end
-strategy_result.close
+  calculate_all_day_in_future(strategy)
 end

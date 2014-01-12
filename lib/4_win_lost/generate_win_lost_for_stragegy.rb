@@ -99,17 +99,18 @@ s_file.close
 end
 
 
-def generate_all(stragety,folder)
+def generate_all_win_lost(stragety)
     #folder="percent_1_num_1_days"
+    folder=AppSettings.send(stragety).win_expect
   counter=0
-  percent_folder=File.expand_path("./#{folder}",$end_date_path)
-  Dir.mkdir(percent_folder) unless File.exists?(percent_folder)
-
+  percent_folder=$win_expect
+  #Dir.mkdir(percent_folder) unless File.exists?(percent_folder)
 	$all_stock_list.keys.each do |symbol|
 		counter+=1
 		puts "#{symbol},#{counter}"
 		 signal_file=File.expand_path("./#{symbol}.txt",$signal_path)
 		 win_lost_statistic=File.expand_path("./#{folder}/#{symbol}.txt",$end_date_path)
+
 		 if File.exists?(signal_file) && (not File.exists?(win_lost_statistic))
 		   generate_counter_for_percent(symbol,folder,stragety)
 	     end
@@ -119,11 +120,10 @@ end
 
 if $0==__FILE__
  start=Time.now
-strategy="hundun_1"
-init_strategy_name(strategy)
- folder="percent_15_num_3"
+ strategy="hundun_1"
+ init_strategy_name(strategy)
  #win_percent_folder="percent_5_num_5"
-# folder="percent_3_num_9_days"
- generate_all(strategy,folder)
+ # folder="percent_3_num_9_days"
+ generate_all_win_lost(strategy)
  puts "cost=#{Time.now-start}"
 end

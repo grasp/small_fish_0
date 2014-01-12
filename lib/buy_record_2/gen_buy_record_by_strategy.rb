@@ -85,6 +85,7 @@ end
 
 def scan_signal_on_date_by_strategy(strategy,date)  
     count=0
+    puts count
 
     Dir.new($counter_statistic_path).each do |symbol|
     count+=1
@@ -116,10 +117,25 @@ def scan_signal_on_date_by_strategy(strategy,date)
 end
 end
 
+def generate_future_buy_list(strategy)
+  init_strategy_name(strategy)
+  12.downto(1).each do |j|
+  30.downto(1).each do |i|
+    next unless Date.valid_date?(2013, j, -i)
+    date = Date.new(2013, j, -i)
+
+    unless (date.wday==6 || date.wday==0)
+      #puts date
+      scan_signal_on_date_by_strategy(strategy,date)
+    end
+  end
+ end
+end
+
 if $0==__FILE__ 
  date="2013-11-13"
  start=Time.now
- strategy="hundun_2"
+ strategy="hundun_3"
  init_strategy_name(strategy)
 12.downto(1).each do |j|
 30.downto(1).each do |i|
