@@ -14,6 +14,14 @@ $logger.level=Logger::INFO
 
 #创建策略文件夹
 Dir.mkdir(AppSettings.send(strategy).path) unless File.exists?(AppSettings.send(strategy).path)
+$raw_data=AppSettings.send(strategy).raw_data
+
+Dir.mkdir($raw_data) unless File.exists?($raw_data)
+$history_daily_3=File.expand_path("history_daily_data3",$raw_data)
+Dir.mkdir($history_daily_3) unless File.exists?($history_daily_3)
+
+$daily_data=File.expand_path("daily_data",$raw_data)
+Dir.mkdir($daily_data) unless File.exists?($daily_data)
 
 $data_process_path=File.expand_path(AppSettings.send(strategy).data_process_path,AppSettings.send(strategy).path)
 Dir.mkdir($data_process_path) unless File.exists?($data_process_path)
@@ -26,8 +34,6 @@ Dir.mkdir($win_lost_path) unless File.exists?($win_lost_path)
 
 $statistic_path=File.expand_path(AppSettings.send(strategy).statistic_path,AppSettings.send(strategy).path)
 Dir.mkdir($statistic_path) unless File.exists?($statistic_path)
-
-
 
 $end_date_path=File.expand_path(AppSettings.send(strategy).end_date,$statistic_path)
 Dir.mkdir($end_date_path) unless File.exists?($end_date_path)

@@ -8,8 +8,9 @@ require File.expand_path("../../22_data_validate/validate_daily_data.rb",__FILE_
 
 #需要对其这几个文件的最后一行的日期才可以做以下的操作，需要做更多的健壮性代码
 
-def daily_append
+def daily_append(strategy)
 
+init_strategy_name(strategy)
 $logger.info("start run daily append on #{Time.now}" )
 
 #获取上次最新的下载日期
@@ -32,7 +33,7 @@ diff_day=get_diff_day(today,last_date1)
 puts "today=#{today},last_date=#{last_date1},diff_day=#{diff_day}"
 Time.now.monday? ? max_diff_day=3 : max_diff_day=1
 
-target_file=File.expand_path("./daily_data/#{today}.txt","#{AppSettings.resource_path}")
+target_file=File.expand_path("#{today}.txt",$daily_data)
 
 #删除文件，如果文件无效
 valid_daily=validate_daily_date(today) if File.exists?(target_file)
@@ -100,5 +101,6 @@ end
 
 
 if $0==__FILE__
-	daily_append
+  strategy="hundun_1" 
+	daily_append(strategy)
 end

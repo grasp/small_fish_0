@@ -19,7 +19,7 @@ end
 
 
 def get_last_date_on_daily_k(symbol)
-    source_file=File.expand_path("./history_daily_data/#{symbol}.txt","#{AppSettings.resource_path}")
+    source_file=File.expand_path("history_daily_data/#{symbol}.txt",$raw_data)
     temp_file=File.new(source_file,"a+")
     last_line=temp_file.readlines[-1].to_s
    # puts "last_line=#{last_line}"

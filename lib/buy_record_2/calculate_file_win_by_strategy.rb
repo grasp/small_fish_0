@@ -54,7 +54,8 @@ def calculate_all_day_in_future(strategy)
    init_strategy_name(strategy)
    strategy_result=File.expand_path("#{strategy}.txt",$count_freq)
    strategy_result_file=File.new(strategy_result,"w+")
- puts "start"
+   puts "start"
+   
    12.downto(1).each do |j|
    30.downto(1).each do |i|
     next unless Date.valid_date?(2013, j, -i)

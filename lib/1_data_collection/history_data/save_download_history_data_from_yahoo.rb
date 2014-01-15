@@ -10,7 +10,7 @@ def download_one_stock_history_data_from_yahoo(symbol,days,folder_path)
   raise if result.size.nil?
   #store to file  
   #symbole_file_name=File.join(lib_path.parent,"history_daily_data","#{symbol}.txt")
-  symbole_file_name=File.expand_path("./#{folder_path}/#{symbol}.txt","#{AppSettings.resource_path}")
+  symbole_file_name=File.expand_path("#{symbol}.txt",folder_path)
 
   puts symbole_file_name
   symbol_file=File.new(symbole_file_name,"w")
@@ -23,15 +23,15 @@ def download_all_symbol_into_history_data(folder_path,days)
 count=0
 $all_stock_list.keys.each do |symbol|
 count+=1
-real_folder_path=File.expand_path("./#{folder_path}","#{AppSettings.resource_path}")
-Dir.mkdir(real_folder_path) unless File.exists?(real_folder_path)
+#real_folder_path=File.expand_path("./#{folder_path}",$raw_path)
+#Dir.mkdir(real_folder_path) unless File.exists?(real_folder_path)
 #symbole_file_name=File.expand_path("../../../../resources/history_daily_data_2/#{symbol}.txt",__FILE__)
-symbole_file_name=File.expand_path("./#{folder_path}/#{symbol}.txt","#{AppSettings.resource_path}")
+symbole_file_name=File.expand_path("./#{folder_path}/#{symbol}.txt",$raw_path)
 #unless File.exists?(symbole_file_name)
-  puts "count=#{count}"
+puts "count=#{count}"
  download_one_stock_history_data_from_yahoo(symbol,days,folder_path)
  #等待8 second 一下，避免访问太多后，不能使用
- sleep 5
+ sleep 8
 #end
 
 end

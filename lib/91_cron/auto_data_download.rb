@@ -1,0 +1,8 @@
+require File.expand_path("../../../init/small_fish_init.rb",__FILE__)
+require File.expand_path("../../1_data_collection/history_data/save_download_history_data_from_yahoo.rb",__FILE__)
+require File.expand_path("../../1_data_collection/daily_data/save_daily_data_into_one_text.rb",__FILE__)
+require File.expand_path("../../1_data_collection/daily_data/append_daily_data_to_history.rb",__FILE__)
+require File.expand_path("../../20_data_process/append_data.rb",__FILE__)
+require File.expand_path("../../30_signal_gen/append_signal.rb",__FILE__)
+require File.expand_path("../../0_common/common.rb",__FILE__)
+require File.expand_path("../../22_data_validate/validate_daily_data.rb",__FILE__)
