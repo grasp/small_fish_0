@@ -14,7 +14,7 @@ def daily_history(strategy)
  raise unless File.exists?(folder)
   date=Time.now.to_s[0..9]
   #最好把这个diff day算出来，而不是一个固定的40
-  download_all_symbol_into_history_data(folder,40)
+  download_all_symbol_into_history_data(folder,60)
 end
 
 if $0==__FILE__

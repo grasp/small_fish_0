@@ -1,7 +1,7 @@
 require File.expand_path("../../../init/small_fish_init.rb",__FILE__)
 
 def validate_daily_date(date)
-  source_file=File.expand_path("./daily_data/#{date}.txt","#{AppSettings.resource_path}")
+  source_file=File.expand_path("./daily_data/#{date}.txt",$raw_data)
   return unless File.exists?(source_file)
   contents=File.read(source_file).split("\n")
 
@@ -23,7 +23,7 @@ def validate_daily_date(date)
 end
 
 def validate_each_file_on_daily_data
-    source_folder=File.expand_path("./daily_data","#{AppSettings.resource_path}")
+    source_folder=File.expand_path("./daily_data",$raw_data)
 end
 
 if $0==__FILE__

@@ -4,10 +4,10 @@ require File.expand_path("../macd_history.rb",__FILE__)
 require File.expand_path("../volume_history.rb",__FILE__)
 
 # 初次计算的值附加
-
 def append_processed_data(symbol,price_array,back_day_array)
 
-  processed_data_path=File.expand_path("./data_process/#{symbol}.txt","#{AppSettings.resource_path}")
+  processed_data_path=File.expand_path("#{symbol}.txt",$data_process_path)
+ # puts "#{processed_data_path}"
   processed_data_file=File.new(processed_data_path,"a+")
 
   back_day_array.reverse.each do |back_day|
@@ -19,6 +19,7 @@ def append_processed_data(symbol,price_array,back_day_array)
 
     result_macd_array=generate_macd_on_backday(price_array,back_day)
     volume_array=generate_volume_array_on_backday(price_array,back_day)
+
     date=price_array[back_day][0]
      # puts "price_array[back_day]=#{price_array[back_day]}"
     #puts "handle date=#{date}"
@@ -39,15 +40,18 @@ end
 
 def get_diff_date(price_array,symbol)
 
-  processed_data_path=File.expand_path("./data_process/#{symbol}.txt","#{AppSettings.resource_path}")
+  processed_data_path=File.expand_path("#{symbol}.txt",$data_process_path)
 
   contents=File.read(processed_data_path).split("\n")
   last_date= contents.last.match(/\d\d\d\d-\d\d-\d\d/).to_s
+ # puts "last_date=#{last_date}"
   back_day_array=[]
 
   0.upto(price_array.size).each do |index|
+    # puts "price_array[index][0]=#{price_array[index]}"
     next if price_array[index].nil?
     #已经最新了，就不进行更行
+   
     if price_array[index][0]==last_date
       break
     else
@@ -59,10 +63,11 @@ end
 back_day_array
 end
 
-def append_diff_data(symbol)
-  price_hash=get_price_hash_from_history(symbol)
+def append_diff_data(strategy,symbol)
+  price_hash=get_price_hash_from_history(strategy,symbol)
   price_array=price_hash.to_a
 
+ # puts "#{price_array.size}"
 
   back_day_array=get_diff_date(price_array,symbol)
 
@@ -70,19 +75,19 @@ def append_diff_data(symbol)
 
 end
 
-def append_all_data_process
+def append_all_data_process(strategy)
     count=0
-    $logger.info("start append all data process")
-    $all_stock_list.keys.each do |symbol|
-     target_file=File.expand_path("./data_process/#{symbol}.txt","#{AppSettings.resource_path}")
-     next unless File.exists?(target_file) #如果原来没有存在，附加就会失败TBD
+    #$logger.info("start append all data process")
 
+    $all_stock_list.keys.each do |symbol|
+     target_file=File.expand_path("#{symbol}.txt",$data_process_path)
+     next unless File.exists?(target_file) #如果原来没有存在，附加就会失败TBD
      count+=1
      puts "append #{symbol},count=#{count}"
         # price_hash=get_price_hash_from_history(symbol)
-         append_diff_data(symbol)
+         append_diff_data(strategy,symbol)
     end
-    $logger.info("end append all data process")
+  #  $logger.info("end append all data process")
 end
 
 
@@ -96,5 +101,5 @@ if $0==__FILE__
 
 #get_diff_date(symbol)
 #append_diff_data(symbol)
-  append_all_data
+#  append_all_data
 end

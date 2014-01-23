@@ -13,10 +13,18 @@ $logger=Logger.new("#{AppSettings.send(strategy).log_path}",'daily')
 $logger.level=Logger::INFO
 
 #创建策略文件夹
-Dir.mkdir(AppSettings.send(strategy).path) unless File.exists?(AppSettings.send(strategy).path)
-$raw_data=AppSettings.send(strategy).raw_data
+$path=AppSettings.send(strategy).path
+Dir.mkdir($path) unless File.exists?($path)
 
+raise unless $path=="e:/hun_dun"
+
+#$raw_data=AppSettings.send(strategy).raw_data
+$raw_data=File.expand_path("raw_data",$path)
 Dir.mkdir($raw_data) unless File.exists?($raw_data)
+
+puts $raw_data
+raise unless $raw_data=="e:/hun_dun/raw_data"
+
 $history_daily_3=File.expand_path("history_daily_data3",$raw_data)
 Dir.mkdir($history_daily_3) unless File.exists?($history_daily_3)
 

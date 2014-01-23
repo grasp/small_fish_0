@@ -8,17 +8,17 @@ require File.expand_path("../../20_data_process/read_daily_price_volume.rb",__FI
 
 
 #back day 0表示最新的一天
-def append_signal_on_back_day_array(symbol,price_array,back_day_array)
+def append_signal_on_back_day_array(strategy,symbol,price_array,back_day_array)
 
-   signal_file_path=File.expand_path("./signal/#{symbol}.txt","#{AppSettings.resource_path}")
+   signal_file_path=File.expand_path("#{symbol}.txt",$signal_path)
    signal_file=File.new(signal_file_path,"a+")
 
-	processed_data=File.expand_path("./data_process/#{symbol}.txt","#{AppSettings.resource_path}")
+	processed_data=File.expand_path("#{symbol}.txt",$data_process_path)
 
 back_day_array.reverse.each do |back_day|
     contents_array=File.read(processed_data).split("\n").reverse
  
-    price_hash=get_price_hash_from_history(symbol)
+    price_hash=get_price_hash_from_history(strategy,symbol)
     price_array=price_hash.to_a
 
     date=price_array[back_day][0]
@@ -39,7 +39,7 @@ back_day_array.reverse.each do |back_day|
     volume_array=result_data[4].gsub(/\[|\]/,"").split(",")
 
     macd_signal_hash=judge_macd_signal(t_macd_array,last_macd_array,back_day)
-	high_price_signal_hash=generate_high_price_signal_on_backday(high_price_array,price_array,back_day)
+	  high_price_signal_hash=generate_high_price_signal_on_backday(high_price_array,price_array,back_day)
     low_price_signal_hash=generate_low_price_signal_on_backday(low_price_array,price_array,back_day)
     volume_signal_hash=generate_volume_signal_on_backday(volume_array,back_day)
     open_signal=generate_open_signal(price_array,back_day)
@@ -58,7 +58,7 @@ end
 
 def get_diff_date_signal(price_array,symbol)
 
-  processed_data_path=File.expand_path("./signal/#{symbol}.txt","#{AppSettings.resource_path}")
+  processed_data_path=File.expand_path("#{symbol}.txt",$signal_path)
 
   contents=File.read(processed_data_path).split("\n")
   last_date= contents.last.match(/\d\d\d\d-\d\d-\d\d/).to_s
@@ -73,20 +73,20 @@ def get_diff_date_signal(price_array,symbol)
      # price_array[index][0]
     end
 end
-print  "back_day_array=#{back_day_array}"
+#print  "back_day_array=#{back_day_array}"
 back_day_array
 end
 
-def append_all_signal
+def append_all_signal(strategy)
     count=0
     $logger.info("start append all signal")
     $all_stock_list.keys.each do |symbol|
         count+=1
-     data_path=File.expand_path("./signal/#{symbol}.txt","#{AppSettings.resource_path}")
+     data_path=File.expand_path("#{symbol}.txt",$signal_path)
      if File.exists?(data_path)
-    price_hash=get_price_hash_from_history(symbol)
+    price_hash=get_price_hash_from_history(strategy,symbol)
     back_day_array=get_diff_date_signal(price_hash.to_a,symbol)
-    append_signal_on_back_day_array(symbol,price_hash.to_a,back_day_array)
+    append_signal_on_back_day_array(strategy,symbol,price_hash.to_a,back_day_array)
     puts "#{symbol},count=#{count}"
 end
     end

@@ -21,7 +21,6 @@ last_date1>=last_date2 ? last_date=last_date1 : last_date=last_date2#总是取�
 
 today=Time.now.to_s[0..9]
 
-
  if today==last_date
  	$logger.info("today==last_date=#{last_date}, exit with 0, already download latest" )
     return 0
@@ -91,14 +90,11 @@ if valid_daily==true && File.exists?(target_file) && (diff_day==max_diff_day) &&
 	  $logger.info("#{$@}.split(",")}")
     end
   end
-
 else
 	$logger.info("did not append any data as append condition not true")
 end
 $logger.info("end run daily append on #{Time.now}")
 end
-
-
 
 if $0==__FILE__
   strategy="hundun_1" 
