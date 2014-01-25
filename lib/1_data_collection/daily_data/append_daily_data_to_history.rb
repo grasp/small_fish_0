@@ -22,7 +22,7 @@ def append_daily_data_into_history(date)
   yahoo_data_hash=Hash.new
  # folder_path=File.expand_path("./daily_data/#{date}","#{AppSettings.resource_path}")
 
-  daily_data_path=File.expand_path("./daily_data/#{date}.txt","#{AppSettings.resource_path}")
+  daily_data_path=File.expand_path("./daily_data/#{date}.txt",$raw_data)
 
   puts daily_data_path
   raise unless File.exists?(daily_data_path)
@@ -63,7 +63,7 @@ def append_daily_data_into_history(date)
       new_array[6]=value[6]
       new_array[5]=((value[5].to_i)*100).to_s #sina and yahoo is different
     #	puts "start #{symbol},#{value[5]},#{new_array[5]},#{((value[5].to_i)*100).to_s}"
-    	history_data_path=File.expand_path("./history_daily_data/#{symbol}.txt","#{AppSettings.resource_path}")
+    	history_data_path=File.expand_path("./history_daily_data/#{symbol}.txt",$raw_data)
 
     	#防止重复写入同一天数据到历史文件
     if File.exists?(history_data_path)
@@ -81,11 +81,16 @@ def appened_today_daily_data
   today=Time.now.to_s[0..9]
   #避免重复导入，先查看下最新日期
   last_date=get_last_date_on_daily_k("000009.sz")
+
+  puts "last_date=#{last_date}"
   if last_date==today
     return -1
   end
 
   Time.now.monday? ? max_diff_day=3 : max_diff_day=1
+  puts "max_diff_day=#{max_diff_day}"
+
+
   return -1 if get_diff_day(today,last_date) > max_diff_day
 
   append_daily_data_into_history(today)
@@ -97,6 +102,8 @@ if $0==__FILE__
     start=Time.now
 	 # append_daily_data_into_history("2013-11-08")
     #appened_today_data
-      append_daily_data_into_history("2013-11-21")
+    strategy="hundun_1"
+    init_strategy_name(strategy)
+    append_daily_data_into_history("2014-01-23")
     puts "cost #{Time.now-start}"
 end

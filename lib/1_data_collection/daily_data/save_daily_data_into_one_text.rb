@@ -11,6 +11,7 @@ def convert_to_sina_symbol(stock_id_array)
    new_stock_array
 end
 
+
 def create_date_folder(date)
 	daily_data_path=File.expand_path("./daily_data","#{AppSettings.resource_path}")
 	#today=Time.now.to_s[0..9]
@@ -89,12 +90,7 @@ end
 
 def save_today_daily_data
   date=Time.now.to_s[0..9]
- # target_file=File.expand_path("./daily_data/#{date}.txt","#{AppSettings.resource_path}")
-
-  #unless File.exists?(target_file)
-     save_daily_data_into_one_text(date)
-  #end
-
+  save_daily_data_into_one_text(date)
 end
 
 

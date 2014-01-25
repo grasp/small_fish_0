@@ -1,11 +1,5 @@
-require File.expand_path("../../../init/small_fish_init.rb",__FILE__)
-require File.expand_path("../../4_win_lost/generate_win_lost_for_stragegy.rb",__FILE__)
-require File.expand_path("../../5_will_buy/will_buy_by_strategy.rb",__FILE__)
-require File.expand_path("../../buy_record_2/gen_buy_record_by_strategy.rb",__FILE__)
-require File.expand_path("../../buy_record_2/calculate_file_win_by_strategy.rb",__FILE__)
 
-
-def report_strategy(strategy)
+def report_strategy(strategy,date)
 
 #首先检查原始统计是否在
 #statistic_result=File.expand_path("",$statistic_file_path)
@@ -38,12 +32,4 @@ puts percent_file
 #end
 
 	
-end
-
-
-if $0==__FILE__
-  start=Time.now
-  strategy="hundun_5"
-  init_strategy_name(strategy)
-  report_strategy(strategy)
 end

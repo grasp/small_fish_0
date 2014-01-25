@@ -13,19 +13,18 @@ def daily_append(strategy)
 init_strategy_name(strategy)
 $logger.info("start run daily append on #{Time.now}" )
 
-#获取上次最新的下载日期
+#从日线数据中获取上次最新的下载日期
 last_date1=get_last_date_on_daily_k("000009.sz").to_s
 last_date2=get_last_date_on_daily_k("000008.sz").to_s
 
 last_date1>=last_date2 ? last_date=last_date1 : last_date=last_date2#总是取比较大的，比较小的可能因为停盘
 
+#如果已经是最新了， 那么不需要做任何下载的动作，但是如果是周六和周日呢
 today=Time.now.to_s[0..9]
-
  if today==last_date
  	$logger.info("today==last_date=#{last_date}, exit with 0, already download latest" )
     return 0
  end
-
 
 # 必须顺序附加，节假日就麻烦了，呵呵
 diff_day=get_diff_day(today,last_date1)
@@ -39,14 +38,14 @@ valid_daily=validate_daily_date(today) if File.exists?(target_file)
 
 if valid_daily==false
   File.delete(target_file)
-  $logger.info("delete the daily data file , and try download again") 
+  $logger.info("delete the invalid daily data file , and try download again") 
 end
 
 #如果还没下载，或者下载文件有问题，准备再重新下载
-if (not File.exists?(target_file)) && (Time.now.hour<8 || Time.now.hour>15 || Time.now.sunday? || Time.now.saturday?)
+if (not File.exists?(target_file)) && (Time.now.hour<7 || Time.now.hour>15 || Time.now.sunday? || Time.now.saturday?)
   save_today_daily_data #下载日线数据到一个文件
 
-#最多下载四次
+#最多重复下载四次
 3.downto(0).each do |i|
 valid_daily=validate_daily_date(today) if File.exists?(target_file)
 
@@ -69,6 +68,7 @@ valid_daily=validate_daily_date(today) if File.exists?(target_file)
 if valid_daily==false
   File.delete(target_file)
 	$logger.info("try 4 times download daily data, failed!!,return -1  ")
+  # 需要增加邮件通知或者email通知
 return -1  
 end
 end

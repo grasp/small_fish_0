@@ -2,7 +2,7 @@ require File.expand_path("../../../init/small_fish_init.rb",__FILE__)
 require 'json'
 
 def generate_win_lost_counter()
-	win_lost=File.expand_path("./win_lost","#{AppSettings.resource_path}")
+	win_lost=File.expand_path("./win_lost",$path)
 	Dir.new(win_lost).each do |folder|
       puts folder
 	end
@@ -11,8 +11,8 @@ end
 #统计输赢的信号比例
 def generate_counter_for_percent(symbol,folder)
     #folder="percent_3_num_3_days"
-    signal_file=File.expand_path("./signal/#{symbol}.txt","#{AppSettings.resource_path}")
-    win_lost_file=File.expand_path("./win_lost/#{folder}/#{symbol}.txt","#{AppSettings.resource_path}")
+    signal_file=File.expand_path("./signal/#{symbol}.txt",$path)
+    win_lost_file=File.expand_path("./win_lost/#{folder}/#{symbol}.txt",$path)
 
     win_lost_array=File.read(win_lost_file).split("\n")
     win_lost_hash=Hash.new
@@ -87,7 +87,7 @@ total_hash.each do |key,value|
 	total_hash[key]=[total,value[0],value[1],(value[0]/total.to_f)]
 end
 
-win_lost_statistic=File.expand_path("./win_lost_statistic/#{folder}/#{symbol}.txt","#{AppSettings.resource_path}")
+win_lost_statistic=File.expand_path("./win_lost_statistic/#{folder}/#{symbol}.txt",$path)
 s_file= File.new(win_lost_statistic,"w+")
 
   total_hash.sort_by {|_key,_value| _value[3]}.reverse.each do |key,value|
@@ -105,8 +105,8 @@ def generate_all(folder)
 	$all_stock_list.keys.each do |symbol|
 		counter+=1
 		puts "#{symbol},#{counter}"
-		 signal_file=File.expand_path("./signal/#{symbol}.txt","#{AppSettings.resource_path}")
-		 win_lost_statistic=File.expand_path("./win_lost_statistic/#{folder}/#{symbol}.txt","#{AppSettings.resource_path}")
+		 signal_file=File.expand_path("./signal/#{symbol}.txt",$path)
+		 win_lost_statistic=File.expand_path("./win_lost_statistic/#{folder}/#{symbol}.txt",$path)
 		 if File.exists?(signal_file) && (not File.exists?(win_lost_statistic))
 		   generate_counter_for_percent(symbol,folder)
 	     end
@@ -114,12 +114,29 @@ def generate_all(folder)
 end
 
 
+def re_generate_all(folder)
+    #folder="percent_1_num_1_days"
+    counter=0
+  $all_stock_list.keys.each do |symbol|
+    counter+=1
+    puts "#{symbol},#{counter}"
+     signal_file=File.expand_path("./signal/#{symbol}.txt",$path)
+     win_lost_statistic=File.expand_path("./win_lost_statistic/#{folder}/#{symbol}.txt",$path)
+     if File.exists?(signal_file)# && (not File.exists?(win_lost_statistic))
+       generate_counter_for_percent(symbol,folder)
+       end
+  end
+end
+
+
 if $0==__FILE__
  start=Time.now
  #generate_win_lost_counter()
  #generate_counter_for_percent("000009.sz")
- folder="percent_3_num_7_days"
+ folder="percent_20_num_3"
 # folder="percent_3_num_9_days"
- generate_all(folder)
+strategy="hundun_1"
+ init_strategy_name(strategy)
+ re_generate_all(folder)
  puts "cost=#{Time.now-start}"
 end

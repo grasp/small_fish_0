@@ -15,7 +15,7 @@ def append_signal_on_back_day_array(strategy,symbol,price_array,back_day_array)
 
 	processed_data=File.expand_path("#{symbol}.txt",$data_process_path)
 
-back_day_array.reverse.each do |back_day|
+  back_day_array.reverse.each do |back_day|
     contents_array=File.read(processed_data).split("\n").reverse
  
     price_hash=get_price_hash_from_history(strategy,symbol)

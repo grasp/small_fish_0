@@ -1,4 +1,4 @@
-require File.expand_path("../../../../init/small_fish_init.rb",__FILE__)
+ require File.expand_path("../../../../init/small_fish_init.rb",__FILE__)
  require File.expand_path("../../../0_common/common.rb",__FILE__)
 
 def download_one_stock_history_data_from_yahoo(symbol,days,folder_path)
@@ -19,7 +19,6 @@ def download_one_stock_history_data_from_yahoo(symbol,days,folder_path)
 end
 
 def download_all_symbol_into_history_data(folder_path,days)
-
 count=0
 $all_stock_list.keys.each do |symbol|
 count+=1
@@ -29,9 +28,9 @@ count+=1
 symbole_file_name=File.expand_path("./#{folder_path}/#{symbol}.txt",$raw_path)
 #unless File.exists?(symbole_file_name)
 puts "count=#{count}"
- download_one_stock_history_data_from_yahoo(symbol,days,folder_path)
+download_one_stock_history_data_from_yahoo(symbol,days,folder_path)
  #等待8 second 一下，避免访问太多后，不能使用
- sleep 8
+sleep 10
 #end
 
 end

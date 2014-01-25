@@ -12,11 +12,11 @@ end
 
 if $0==__FILE__
 	strategy="hundun_1"
-	date="2014-01-17"
+	date="2014-01-23"
 	symbol="000002.sz"
 	init_strategy_name(strategy)
-	#append_all_price_file(strategy,date)
-	#append_all_data_process(strategy)
+	append_all_price_file(strategy,date)
+	append_all_data_process(strategy)
 
 append_all_signal(strategy)
 end
