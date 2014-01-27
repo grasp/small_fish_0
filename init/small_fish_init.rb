@@ -16,7 +16,7 @@ $logger.level=Logger::INFO
 $path=AppSettings.send(strategy).path
 Dir.mkdir($path) unless File.exists?($path)
 
-raise unless $path=="e:/hun_dun"
+#raise unless $path=="e:/hun_dun"
 
 #$raw_data=AppSettings.send(strategy).raw_data
 $raw_data=File.expand_path("raw_data",$path)

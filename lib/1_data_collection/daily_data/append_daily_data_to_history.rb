@@ -104,6 +104,6 @@ if $0==__FILE__
     #appened_today_data
     strategy="hundun_1"
     init_strategy_name(strategy)
-    append_daily_data_into_history("2014-01-23")
+    append_daily_data_into_history("2014-01-27")
     puts "cost #{Time.now-start}"
 end

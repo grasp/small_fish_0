@@ -1,0 +1,1 @@
+C:\Ruby200-x64\bin\ruby.exe e:\small_fish_0\lib\94_sina_cron\daily_sina_download.rb
