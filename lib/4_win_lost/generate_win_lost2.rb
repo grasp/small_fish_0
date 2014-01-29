@@ -66,8 +66,9 @@ end
 
 #判断那些组合
 def generate_all_zuhe(strategy_name)
-	percent_array=[0.5,1,1.5,2,2.5,3]
-	number_day=[2,3,4,5,6,7]
+  #减少组合，使得更少，3%就不错了，哈哈
+	percent_array=[1.5,2,2.5,3]
+	number_day=[2,3,4,5]
 
 	percent_array.each do |percent|
 		number_day.each do |num_day|

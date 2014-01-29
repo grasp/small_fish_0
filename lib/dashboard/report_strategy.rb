@@ -34,7 +34,7 @@ end
 percent_file=File.expand_path("#{strategy}.txt",$count_freq)
 puts percent_file
 #unless File.exists?(percent_file)
-	calculate_all_day_in_future(strategy) #if  File.stat(percent_file).size==0
+calculate_all_day_in_future(strategy) #if  File.stat(percent_file).size==0
 #end
 
 	

@@ -10,7 +10,7 @@ def yahoo_convert_result_to_hash(result,result_hash)
 end
 
 def yahoo_get_real_time_stock_data(symbol)
-	command_run="ruby G:\\small_fish_0\\lib\\yahoo\\yahoofinance.rb -r #{symbol}"
+	command_run="ruby E:\\small_fish_0\\lib\\1_data_collection\\yahoo\\yahoofinance.rb -r #{symbol}"
 	result=`#{command_run}`
 	result_hash=Hash.new
 
@@ -24,7 +24,7 @@ def yahoo_get_real_time_stock_data(symbol)
 end
 
 def yahoo_get_standand_quote(symbol)
-  	command_run="ruby G:\\small_fish_0\\lib\\yahoo\\yahoofinance.rb -s #{symbol}"
+  	command_run="ruby E:\\small_fish_0\\lib\\1_data_collection\\yahoo\\yahoofinance.rb -s #{symbol}"
 	result=`#{command_run}`
 	result_hash=Hash.new
 
@@ -34,7 +34,7 @@ def yahoo_get_standand_quote(symbol)
 end
 
 def yahoo_get_extend_quote(symbol)
-	command_run="ruby G:\\small_fish_0\\lib\\yahoo\\yahoofinance.rb -x #{symbol}"
+	command_run="ruby E:\\small_fish_0\\lib\\1_data_collection\\yahoo\\yahoofinance.rb -x #{symbol}"
 	result=`#{command_run}`
 	result_hash=Hash.new
 

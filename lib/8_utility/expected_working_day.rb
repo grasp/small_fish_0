@@ -49,8 +49,6 @@ def load_working_day_into_hash(year)
   end
   another_hash= Hash[working_day_hash.sort_by{|key,value| key}]
   another_hash
-
-#another_hash.to_a
 end
 
 #获取最近的交易日信息
@@ -59,7 +57,7 @@ def get_expected_working_date(year,date)
 
   if working_day_hash[date]=="true"
     puts working_day_hash[date]
-    return true 
+    return date 
   else
     working_day_array=working_day_hash.to_a
     (working_day_array.size-1).downto(0).each do |index|
@@ -75,8 +73,6 @@ def get_expected_working_date(year,date)
       end
     end
   end
-
-
 end
 
 #报告休市和非休市的总天数

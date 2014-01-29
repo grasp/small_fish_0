@@ -12,6 +12,7 @@ require File.expand_path("../../8_utility/email_notify.rb",__FILE__)
 
 #该函数只负责下载当下最新的日线数据，也不附加到原始信号，并有防止重复下载功能
 
+#利用新浪的实时接口下载数据
 def daily_append(strategy)
 init_strategy_name(strategy)
 $logger.info("start run daily append on #{Time.now}" )
@@ -42,7 +43,7 @@ last_date1>=last_date2 ? last_date=last_date1 : last_date=last_date2#总是取�
 ################
 
 #删除文件，如果文件无效
-valid_daily=validate_daily_date(today) if File.exists?(target_file)
+valid_daily=validate_daily_date(expected_working_day) if File.exists?(target_file)
 
 if valid_daily==false
   File.delete(target_file)
@@ -56,7 +57,7 @@ save_today_daily_data #此处下载日线数据到一个文件
 
 #最多重复下载四次
 3.downto(0).each do |i|
-valid_daily=validate_daily_date(today) if File.exists?(target_file)
+valid_daily=validate_daily_date(expected_working_day) if File.exists?(target_file)
 
 if valid_daily==false
   File.delete(target_file)
