@@ -72,7 +72,11 @@ def combine_daily_data_from_sina(stock_id_array,date)
         puts ("sina reject to download ,try once again")
         $logger.error("sina reject to download ,try once again")
        end
-        sleep 3 #等待5秒钟
+        sleep 1  if counter%10==0 #等待5秒钟
+        if stock_id.match(/\d\d\d318/)
+          puts "ignore #{stock_id}"
+        next 
+        end
        	yahoo_array.unshift(stock_id)
        	daily_txt_file<<yahoo_array.join("#")+"\n"
        	puts "#{counter},done for #{stock_id} #{(counter.to_f/totalsize).round(1)}"

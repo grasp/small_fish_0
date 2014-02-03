@@ -30,7 +30,7 @@ symbole_file_name=File.expand_path("./#{folder_path}/#{symbol}.txt",$raw_path)
 puts "count=#{count}"
 download_one_stock_history_data_from_yahoo(symbol,days,folder_path)
  #等待8 second 一下，避免访问太多后，不能使用
-sleep 10
+sleep 8
 #end
 
 end

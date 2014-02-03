@@ -11,7 +11,8 @@ def report_strategy(strategy)
 #statistic_result=File.expand_path("",$statistic_file_path)
 statistic_file_lenth=Dir["#{$statistic_file_path}/*"].length
 unless statistic_file_lenth>2000
- puts "please generate first statistic file for #{$statistic_file_path} at first"
+ puts "please generate first statistic file for #{$statistic_file_path} at first \n"
+ puts "generate now...... \n"
  generate_all_win_lost(strategy)
 end
 
@@ -43,7 +44,7 @@ end
 
 if $0==__FILE__
   start=Time.now
-  strategy="hundun_5"
+  strategy="hundun_7"
   init_strategy_name(strategy)
   report_strategy(strategy)
 end

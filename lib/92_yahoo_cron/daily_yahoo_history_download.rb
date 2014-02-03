@@ -15,7 +15,7 @@ def daily_history(strategy)
  raise unless File.exists?(folder)
   date=Time.now.to_s[0..9]
   #最好把这个diff day算出来，而不是一个固定的40
-  download_all_symbol_into_history_data(folder,60)
+  download_all_symbol_into_history_data(folder,5000)
   Notifier.email("hunter.wxhu@163.com;hunter.hu@nsn.com;hunter.wxhu@gmail.com","small_fish:#{today} yahoo history download done !","done!").deliver!
 
 end

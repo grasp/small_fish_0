@@ -1,9 +1,12 @@
-require File.expand_path("../read_daily_price_volume.rb",__FILE__)
+require File.expand_path("../../utility/utility.rb",__FILE__)
+require File.expand_path("../../utility/read_daily_price_volume.rb",__FILE__)
 
+module StockRawDataProcess
+  include StockUtility
 #依次为开盘，最高，最低，收盘，成交量
-def low_high_price_analysis(price_hash)
+def low_high_price_analysis(price_array)
 
-   price_array=price_hash.to_a
+  # price_array=price_hash.to_a.reverse #最新的数据在第一个
 
    day_array=[] #存储  
 
@@ -12,6 +15,7 @@ def low_high_price_analysis(price_hash)
 
    price_array.each_index do |daily_k_index|
      date=price_array[daily_k_index][0]
+   #  puts "date=#{date}"
      result=low_high_price_array_on_backdays(price_array,daily_k_index)
      low_price_hash[date]=result[0]
      high_price_hash[date]=result[1]
@@ -19,7 +23,7 @@ def low_high_price_analysis(price_hash)
    end#end of one day index
 
 [low_price_hash,high_price_hash]
-
+#print [low_price_hash,high_price_hash]
 end
 
 def low_high_price_array_on_backdays(price_array,back_day)
@@ -30,7 +34,7 @@ def low_high_price_array_on_backdays(price_array,back_day)
     day_array=[]
 
   [1,2,3,4,5,10,20,30,60,100,120].each do |i|
-     day_array<<AppSettings.send("price_#{i}_day")
+     day_array<<i
    end
 
    #计算每一日的各个均值
@@ -42,25 +46,30 @@ def low_high_price_array_on_backdays(price_array,back_day)
         #边界处理
         back_day+j>price_array.size-1 ? index=price_array.size-1 : index=back_day+j
         print "price_array[index]=#{price_array[index]},#{index}" if  price_array[index].nil?
+
         #比较
         lowest_price=price_array[index][1][3] if price_array[index][1][3].to_f < lowest_price.to_f
         highest_price= price_array[index][1][3]  if highest_price.to_f<price_array[index][1][3].to_f
+
     end  #end of macd_day sum  
+
     raise if lowest_price.nil?
     low_price_array<<lowest_price
     high_price_array<<highest_price
  
     end #end of one of macd day
-[low_price_array,high_price_array]
+   [low_price_array,high_price_array]
 end
 
-def test_low_high_price_analysis
-    price_hash=get_price_hash_from_history("000009.sz")
-    low_high_price_analysis(price_hash)
-end
 
+
+end
 if $0==__FILE__
+    include StockRawDataProcess
     start=Time.now
-    result=test_low_high_price_analysis
+    strategy="hundun_1"
+    price_hash=get_price_hash_from_history(strategy,"000004.sz")
+    price_array=price_hash.to_a.reverse
+    low_high_price_analysis(price_array)
     puts "cost #{Time.now-start} second"
 end

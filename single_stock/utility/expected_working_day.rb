@@ -1,4 +1,4 @@
-require File.expand_path("../utility.rb",__FILE__)
+ require File.expand_path("../../../init/small_fish_init.rb",__FILE__)
 
 #产生交易日和非交易日的初步草稿，为人工调整打下基础
  def generate_full_day(year)
