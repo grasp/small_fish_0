@@ -4,7 +4,8 @@ require File.expand_path("../low_price_signal.rb",__FILE__)
 require File.expand_path("../high_price_signal.rb",__FILE__)
 require File.expand_path("../open_signal.rb",__FILE__)
 require File.expand_path("../volume_signal.rb",__FILE__)
-
+module StockSignal
+    include StockUtility
 def save_all_signal_to_file(strategy_name,symbol)
      #各种信号放到一起用于保存的Hash
 	  save_hash={}
@@ -49,12 +50,15 @@ def save_all_signal_to_file(strategy_name,symbol)
         high_price_signal_hash=high_price_signal(full_high_price_array,full_price_array,index)
 
         #puts "volume"+full_volume_array[index][0]
-        volume_signal_hash=generate_volume_sigmal_by_full(full_volume_array,index)
-        open_signal=generate_open_signal(full_price_array,index)
+        volume_signal_hash=generate_volume_sigmal_by_full(strategy_name,full_volume_array,index)
+        
+        open_signal=generate_open_signal(strategy_name,full_price_array,index)
+
         save_hash[date]=macd_signal_hash.merge(low_price_signal_hash).merge(high_price_signal_hash).merge(volume_signal_hash).merge(open_signal)
      end
 
-  signal_file_path=File.expand_path("./#{symbol}.txt",$signal_path)
+ # signal_file_path=File.expand_path("./#{symbol}.txt",$signal_path)
+  signal_file_path=File.join(Strategy.send(strategy_name).root_path,symbol,Strategy.send(strategy_name).signal_path,"#{symbol}.txt")
 
  # unless File.exists?(signal_file_path)
    first_line_flag=true
@@ -73,13 +77,13 @@ def save_all_signal_to_file(strategy_name,symbol)
 
 end
 
-def test_save_one_symbol(symbol)
-  save_all_signal_to_file(symbol)
+def test_save_one_symbol(strategy,symbol)
+  save_all_signal_to_file(strategy,symbol)
 end
 
 def test_save_all_signal
 
-    count=0
+   count=0
    strategy="hundun_1"
    init_strategy_name(strategy)
     $all_stock_list.keys.each do |stock_id|
@@ -94,9 +98,10 @@ def test_save_all_signal
         end
       end
 end
-
+end
 if $0==__FILE__
-    test_save_all_signal
-  # test_save_one_symbol("000009.sz")
+  include StockSignal
+   # test_save_all_signal
+   test_save_one_symbol("hundun_1","000004.sz")
  end
 

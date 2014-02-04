@@ -38,6 +38,7 @@ def generate_full_volume_signal(strategy,symbol)
 
      #获取完成的价格hash
      price_hash=get_price_hash_from_history(strategy,symbol)
+     
      full_price_array=price_hash.to_a
 
 
