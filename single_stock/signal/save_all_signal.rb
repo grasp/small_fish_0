@@ -6,15 +6,15 @@ require File.expand_path("../open_signal.rb",__FILE__)
 require File.expand_path("../volume_signal.rb",__FILE__)
 module StockSignal
     include StockUtility
-def save_all_signal_to_file(strategy_name,symbol)
+def save_all_signal_to_file(strategy,symbol)
      #各种信号放到一起用于保存的Hash
 	  save_hash={}
 
      #第一次数据分析以后的数据载入
-     processed_data_array=read_full_data_process_file(strategy_name,symbol)
+     processed_data_array=read_full_data_process_file(strategy,symbol)
     
      #获取完成的价格hash
-      price_hash=get_price_hash_from_history(strategy_name,symbol)
+      price_hash=get_price_hash_from_history(strategy,symbol)
 
       #puts price_hash.to_a[1]
 
@@ -50,15 +50,15 @@ def save_all_signal_to_file(strategy_name,symbol)
         high_price_signal_hash=high_price_signal(full_high_price_array,full_price_array,index)
 
         #puts "volume"+full_volume_array[index][0]
-        volume_signal_hash=generate_volume_sigmal_by_full(strategy_name,full_volume_array,index)
+        volume_signal_hash=generate_volume_sigmal_by_full(strategy,full_volume_array,index)
         
-        open_signal=generate_open_signal(strategy_name,full_price_array,index)
+        open_signal=generate_open_signal(strategy,full_price_array,index)
 
         save_hash[date]=macd_signal_hash.merge(low_price_signal_hash).merge(high_price_signal_hash).merge(volume_signal_hash).merge(open_signal)
      end
 
  # signal_file_path=File.expand_path("./#{symbol}.txt",$signal_path)
-  signal_file_path=File.join(Strategy.send(strategy_name).root_path,symbol,Strategy.send(strategy_name).signal_path,"#{symbol}.txt")
+  signal_file_path=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).signal_path,"#{symbol}.txt")
 
  # unless File.exists?(signal_file_path)
    first_line_flag=true
@@ -85,7 +85,7 @@ def test_save_all_signal
 
    count=0
    strategy="hundun_1"
-   init_strategy_name(strategy)
+   init_strategy(strategy)
     $all_stock_list.keys.each do |stock_id|
       target_file_path=File.expand_path("./#{stock_id}.txt",$signal_path) 
       processed_file_path=File.expand_path("./#{stock_id}.txt",$data_process_path)

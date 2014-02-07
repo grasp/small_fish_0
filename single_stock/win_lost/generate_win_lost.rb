@@ -36,20 +36,23 @@ end
 
 
  #产生单个的win lost
-def generate_win_lost(stragey,symbol,percent,number_day)
+def generate_win_lost(stragey,symbol)
 
 	price_hash=get_price_hash_from_history(stragey,symbol)
+
 	price_array=price_hash.to_a.reverse
+
 	size=price_hash.size
-  percent_num_day_folder_name="percent_#{percent}_num_#{number_day}_days"
+
+  percent_num_day_folder_name=Strategy.send(stragey).win_expect
+
+  percent=percent_num_day_folder_name.split("_")[1].to_i
+  number_day=percent_num_day_folder_name.split("_")[3].to_i
   percent_num_day_folder=File.join(Strategy.send(stragey).root_path,symbol,Strategy.send(stragey).win_lost_path,percent_num_day_folder_name)
+
   Dir.mkdir(percent_num_day_folder) unless File.exists?(percent_num_day_folder)
   file_path=File.join(Strategy.send(stragey).root_path,symbol,Strategy.send(stragey).win_lost_path,percent_num_day_folder_name,"#{symbol}.txt")
-  #file_path=File.expand_path("./#{target_folder}/#{symbol}.txt",$win_lost_path)
 
-   # puts "file_path=#{file_path}"
-
-   # raise  unless File.exists?(file_path)
     win_lost_file=File.new(file_path,"w+")
 
     (price_array.size-1).downto(0).each do |back_day|
@@ -109,5 +112,5 @@ if $0==__FILE__
 #generate_all_zuhe(strategy_name)
 percent=15
 number_day=2
-generate_win_lost(stragey,"000004.sz",percent,number_day)
+generate_win_lost(stragey,"000004.sz")
 end

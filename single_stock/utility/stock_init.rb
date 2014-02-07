@@ -1,10 +1,9 @@
-require File.expand_path("../utility.rb",__FILE__)
+#require File.expand_path("../utility.rb",__FILE__)
+require File.expand_path("../../utility/stock_list_init.rb",__FILE__)
 module StockUtility
 
-	def initialize_singl_stock_folder(strategy_file, strategy,symbol)
+	def initialize_singl_stock_folder(strategy,symbol)
 
-            puts "strategy_file=#{strategy_file}"
-	   raise unless File.exists?(strategy_file) #策略文件必须在哪里
 	   #mk root path
 	  $root_path=Strategy.send(strategy).root_path
       Dir.mkdir($root_path)  unless File.exists?($root_path)
@@ -42,9 +41,9 @@ module StockUtility
       Dir.mkdir(statistic_path) unless File.exists?(statistic_path)
 
       #end_date_path
-      start_date=Strategy.send(strategy).start_date
+      #start_date=Strategy.send(strategy).start_date
       end_date=Strategy.send(strategy).end_date
-      end_date_path=File.expand_path("#{start_date}_#{end_date}",statistic_path)
+      end_date_path=File.expand_path("#{end_date}",statistic_path)
       Dir.mkdir(end_date_path) unless File.exists?(end_date_path)
 
       #win_expect
@@ -60,18 +59,23 @@ module StockUtility
       Dir.mkdir(buy_record_path) unless File.exists?(buy_record_path)
 
       #report
-      report_path=File.expand_path(Strategy.send(strategy).report,count_freq_path)
+      report_path=File.expand_path(Strategy.send(strategy).single_report,count_freq_path)
       Dir.mkdir(report_path) unless File.exists?(report_path)
 	end
+
+
+      #init global
+
+      load_stock_list_file if $all_stock_list.nil?
 end
 
 
 
 if $0==__FILE__
 include StockUtility
-	strategy_file=File.expand_path("../strategy.yml",__FILE__)
+	#strategy_file=File.expand_path("../strategy.yml",__FILE__)
 	strategy="hundun_1"
 	symbol="000002.sz"
 	#stock=Stock.new(strategy_file,strategy,symbol)
-	StockUtility::initialize_singl_stock_folder(strategy_file,strategy,symbol)
+	StockUtility::initialize_singl_stock_folder(strategy,symbol)
 end

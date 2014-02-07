@@ -7,12 +7,12 @@ module  StockRawDataProcess
    include StockUtility
 
   #保存单只股票的初步数据加工
-def save_analysis_result(straty_name,symbol)
+def save_analysis_result(strategy,symbol)
 
     #result_file_path=File.expand_path("./#{symbol}.txt",$data_process_path)
-    result_file_path=File.join(Strategy.send(straty_name).root_path,symbol,Strategy.send(straty_name).raw_data_process,"#{symbol}.txt")
+    result_file_path=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).raw_data_process,"#{symbol}.txt")
   puts "result_file_path=#{result_file_path}"
-    price_hash=get_price_hash_from_history(straty_name,symbol)
+    price_hash=get_price_hash_from_history(strategy,symbol)
     
     #倒序存放，方便append
     reversed_price_array=price_hash.to_a.reverse
@@ -47,7 +47,7 @@ def save_analysis_result(straty_name,symbol)
 end
 
 #暂时不用
-def save_all_analysis_result(straty_name)
+def save_all_analysis_result(strategy)
 
     start=Time.now
 
@@ -60,11 +60,11 @@ def save_all_analysis_result(straty_name)
   #  invalide_list=get_invalid_history_daily_data_list
 
     $all_stock_list.keys.each do |stock_id|      
-      target_file_path=File.expand_path("#{stock_id}.txt","#{AppSettings.send(straty_name).data_process_path}") 
+      target_file_path=File.expand_path("#{stock_id}.txt","#{AppSettings.send(strategy).data_process_path}") 
       next if  File.exists?(target_file_path)
-      next if not  File.exists?(File.expand_path("./history_daily_data/#{stock_id}.txt","#{AppSettings.send(straty_name).raw_data}"))
+      next if not  File.exists?(File.expand_path("./history_daily_data/#{stock_id}.txt","#{AppSettings.send(strategy).raw_data}"))
      # if (not File.exists?(target_file_path)) &&  (not invalide_list.include?(stock_id))  
-        result=save_analysis_result(straty_name,stock_id) 
+        result=save_analysis_result(strategy,stock_id) 
         count+=1
         puts "count=#{count},result=#{result}"
     #  end
@@ -80,6 +80,6 @@ end
 if $0==__FILE__
   #save_analysis_result("000009.sz")
   include StockRawDataProcess
-  straty_name="hundun_1"
-  save_analysis_result(straty_name,"000004.sz")
+  strategy="hundun_1"
+  save_analysis_result(strategy,"000004.sz")
 end

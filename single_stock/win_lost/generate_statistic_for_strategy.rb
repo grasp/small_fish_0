@@ -17,6 +17,8 @@ def generate_counter_for_percent(stragety,symbol)
 
    # percent_num_day_folder="percent_#{percent}_num_#{number_day}_days"
     percent_num_day_folder=Strategy.send(stragety).win_expect
+    #puts "stragety=#{stragety},percent_num_day_folder=#{percent_num_day_folder}"
+
     end_date=Strategy.send(stragety).end_date
     result=percent_num_day_folder.split("_")
     percent=result[1].to_i
@@ -31,6 +33,7 @@ def generate_counter_for_percent(stragety,symbol)
   unless File.exists?(win_lost_file)
     generate_win_lost(stragety,symbol,percent,number_day)
   end
+  
     win_lost_array=File.read(win_lost_file).split("\n")
 
     win_lost_hash=Hash.new
@@ -71,7 +74,7 @@ iter_array.each do |cycle|
  	possible_zuhe<<[cycle,i]
  end
 end
-puts "possible_zuhe.size=#{possible_zuhe.size}"
+#puts "possible_zuhe.size=#{possible_zuhe.size}"
 #puts "possible_zuhe=#{possible_zuhe}"
 
 count=0
@@ -83,18 +86,19 @@ possible_zuhe.each do |zuhe|
 	b=zuhe[1]
   c=zuhe[0].to_s
   d=zuhe[1].to_s
-
+ key_1=c+"_"+d+"_"
 win_lost_hash.each do |date,w_l|
 
-signal_array=signal_hash[date].values_at(a,b)
-
-	key=""
-	key<<c<<"_"<<d<<signal_array[0]<<signal_array[1]
-	w_l=="true" ? win_hash[key]+=1 : lost_hash[key]+=1
-	
+signal_array=signal_hash[date]
+  key=""
+	key<<key_1<<signal_array[a]<<signal_array[b]
+  if w_l=="true"
+    win_hash[key]+=1
+  else
+    lost_hash[key]+=1
+  end	
 end
 end
-
 total_hash=Hash.new
 
 win_hash.each do |key,value|
@@ -163,7 +167,7 @@ if $0==__FILE__
  #win_percent_folder="percent_5_num_5"
  # folder="percent_3_num_9_days"
  #generate_all_win_lost(strategy)
- symbol="000004.sz"
+ symbol="000005.sz"
  #generate_counter_for_percent(strategy,symbol,20,2,"2012-12-30")
  generate_counter_for_percent(strategy,symbol)
  puts "cost=#{Time.now-start}"

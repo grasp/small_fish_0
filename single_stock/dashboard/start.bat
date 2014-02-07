@@ -1,0 +1,10 @@
+start C:\Ruby200-x64\bin\ruby.exe E:\small_fish_0\single_stock\dashboard\report_group_1.rb
+start  C:\Ruby200-x64\bin\ruby.exe E:\small_fish_0\single_stock\dashboard\report_group_2.rb
+start  C:\Ruby200-x64\bin\ruby.exe E:\small_fish_0\single_stock\dashboard\report_group_3.rb
+start  C:\Ruby200-x64\bin\ruby.exe E:\small_fish_0\single_stock\dashboard\report_group_4.rb
+start  C:\Ruby200-x64\bin\ruby.exe E:\small_fish_0\single_stock\dashboard\report_group_5.rb
+start  C:\Ruby200-x64\bin\ruby.exe E:\small_fish_0\single_stock\dashboard\report_group_6.rb
+start  C:\Ruby200-x64\bin\ruby.exe E:\small_fish_0\single_stock\dashboard\report_group_7.rb
+start  C:\Ruby200-x64\bin\ruby.exe E:\small_fish_0\single_stock\dashboard\report_group_8.rb
+start  C:\Ruby200-x64\bin\ruby.exe E:\small_fish_0\single_stock\dashboard\report_group_9.rb
+start C:\Ruby200-x64\bin\ruby.exe E:\small_fish_0\single_stock\dashboard\report_group_10.rb

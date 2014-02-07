@@ -1,5 +1,5 @@
 hundun_1:
-  root_path: "e:/feishu"
+  root_path: "e:/feishu_hundun_2"
   log_name: "log/feishu.log"
   raw_data: "raw_data"
   working_year: "2014.xt"
@@ -12,7 +12,10 @@ hundun_1:
   statistic: "statistic"
   start_date: "2000-01-01"
   end_date: "2012-12-30"
-  win_expect: "percent_10_num_2_days"
-  count_freq: "count_10_percent_80"
+  win_expect: "percent_20_num_5_days"
+  count_freq: "count_20_percent_95"
+  triple_filter: "count_10_percent_51"
   buy_record: "buy_record"
-  report:  "report"
+  report: "e:/report"
+  single_report:  "report"
+
