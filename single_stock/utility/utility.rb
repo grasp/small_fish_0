@@ -1,7 +1,7 @@
 require 'action_mailer'
 require 'settingslogic'
 
-require File.expand_path("../../utility/stock_init.rb",__FILE__)
+#require File.expand_path("../../utility/stock_init.rb",__FILE__)
 
  class Strategy < Settingslogic
       source File.expand_path('../strategy.yml',__FILE__)

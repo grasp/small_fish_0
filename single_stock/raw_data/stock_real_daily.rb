@@ -15,11 +15,11 @@ module StockUtility
 
 
     sina_id=convert_yahoo_symbol_to_sina(symbol)
-	response= Net::HTTP.get("hq.sinajs.cn","/list=#{sina_id}" )
-	result_array= response.split(",")
+	  response= Net::HTTP.get("hq.sinajs.cn","/list=#{sina_id}" )
+	  result_array= response.split(",")
 
-	yahoo_array=[]
-	yahoo_array<< result_array[30]
+	  yahoo_array=[]
+	  yahoo_array<< result_array[30]
     yahoo_array<< result_array[1]
     yahoo_array<< result_array[4]
     yahoo_array<< result_array[5]

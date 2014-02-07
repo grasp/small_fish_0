@@ -1,5 +1,5 @@
 hundun_1:
-  root_path: "e:/feishu_hundun_2"
+  root_path: "e:/feishu_A"
   log_name: "log/feishu.log"
   raw_data: "raw_data"
   working_year: "2014.xt"
@@ -16,6 +16,6 @@ hundun_1:
   count_freq: "count_20_percent_95"
   triple_filter: "count_10_percent_51"
   buy_record: "buy_record"
-  report: "e:/report"
+  total_report: "total_report"
   single_report:  "report"
 

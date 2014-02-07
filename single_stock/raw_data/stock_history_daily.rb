@@ -1,7 +1,7 @@
 require File.expand_path("../../utility/utility.rb",__FILE__)
 require File.expand_path("../../utility/stock_init.rb",__FILE__)
-module StockUtility
 
+module StockUtility
 
 #下载yahoo的历史数据到历史文件夹
 def download_yahoo_history(strategy,symbol)
