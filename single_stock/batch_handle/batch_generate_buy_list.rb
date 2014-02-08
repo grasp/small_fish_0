@@ -11,12 +11,13 @@ include StockBuyRecord
 
 
   symbol_array=$all_stock_list.keys
- counter=0
- (symbol_array.size-1).downto(0).each do |index|  
+  counter=0
+  (symbol_array.size-1).downto(0).each do |index|  
     counter+=1
-    symbol=symbol_array[index]
-    puts "counter=#{counter},#{symbol}"
+ 	start=Time.now
+    symbol=symbol_array[index]   
     generate_future_buy_list("hundun_1",symbol)
+    puts "counter=#{counter},#{symbol},cost=#{Time.now-start}"
   end
 
 

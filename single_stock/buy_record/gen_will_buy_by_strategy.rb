@@ -73,7 +73,6 @@ def scan_signal_on_date_by_strategy(strategy,date,symbol)
     return 
     end
   #puts "will_buy_array.size=#{will_buy_array.size}"
-    buy_record_file=File.new(buy_record_path,"a+")
     will_buy_array.each do |line|
    # puts line
     result=line.split("#")
@@ -86,17 +85,9 @@ def scan_signal_on_date_by_strategy(strategy,date,symbol)
     
    # puts "date =#{date},real_signal=#{real_signal},result[0]=#{result[0]}"
     if real_signal==result[0] #如果信号和发生次数多的相符合，那就是购买信号
-      buy_record_file<<line+"\n"
-     # break
+     return date
     end
   end
-  buy_record_file.close
-
-if File.stat(buy_record_path).size==0
-   File.delete(buy_record_path)
-   else
-   return date
-end
 return nil
 end
 
@@ -106,7 +97,7 @@ buy_list=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strate
     Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,Strategy.send(strategy).count_freq,"buy_record","buy_list.txt")
 
  unless File.exists?(buy_list)
-  buy_list_file=File.new(buy_list,"w+")
+  buy_list_file=File.new(buy_list,"a+")
   12.downto(1).each do |j|
   30.downto(1).each do |i|
     next unless Date.valid_date?(2013, j, -i)
