@@ -81,7 +81,11 @@ end
 
   load_stock_list_file if $all_stock_list.nil?
 
-
+  result=`ipconfig`
+  if result.match("10.69.70.34")
+   ENV['http_proxy']="http://10.140.19.49:808"
+   ENV['https_proxy']="https://10.140.19.49:808"
+  end
 
 if $0==__FILE__
 include StockUtility

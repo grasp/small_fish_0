@@ -91,12 +91,22 @@ def scan_signal_on_date_by_strategy(strategy,date,symbol)
     end
   end
   buy_record_file.close
+
 if File.stat(buy_record_path).size==0
-  File.delete(buy_record_path) 
+   File.delete(buy_record_path)
+   else
+   return date
 end
+return nil
 end
 
 def generate_future_buy_list(strategy,symbol)
+      #buy_list_done_txt=File.join()
+buy_list=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
+    Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,Strategy.send(strategy).count_freq,"buy_record","buy_list.txt")
+
+ unless File.exists?(buy_list)
+  buy_list_file=File.new(buy_list,"w+")
   12.downto(1).each do |j|
   30.downto(1).each do |i|
     next unless Date.valid_date?(2013, j, -i)
@@ -104,10 +114,17 @@ def generate_future_buy_list(strategy,symbol)
     #puts date
     unless (date.wday==6 || date.wday==0)
       #puts date
-      scan_signal_on_date_by_strategy(strategy,date,symbol) 
+      buy_list_file<<scan_signal_on_date_by_strategy(strategy,date,symbol) 
     end
   end
  end
+  buy_list_file.close
+else
+  puts "#{symbol} already generated buy list"
+end
+
+
+
 end
 
 end
@@ -117,8 +134,8 @@ if $0==__FILE__
  include StockBuyRecord
  date="2013-11-13"
  start=Time.now
- strategy="percent_20_num_5_days"
- symbol="000025.sz"
+ strategy="hundun_1"
+ symbol="000002.sz"
  generate_future_buy_list(strategy,symbol)
 
  puts "cost time=#{Time.now-start}"

@@ -21,7 +21,7 @@ def report_all_symbol_win_percent(strategy)
     	symbol=filename.gsub("\.txt","").to_s
      count+=1
      puts "count=#{count},symbol=#{symbol}"
-	 buy_record_folder=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
+	   buy_record_folder=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
   	 Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,Strategy.send(strategy).count_freq)
      result=report_total_win_percent(strategy,symbol)
   	 
@@ -34,5 +34,4 @@ end
 
 if $0==__FILE__
  report_all_symbol_win_percent("hundun_1")
-
 end

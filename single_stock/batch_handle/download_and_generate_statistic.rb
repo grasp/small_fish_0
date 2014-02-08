@@ -68,7 +68,13 @@ require File.expand_path("../../utility/read_daily_price_volume.rb",__FILE__)
   $all_stock_list.keys.each do |symbol|
     counter+=1
     start=Time.now
+    next if symbol=="600631.ss"
+    begin
     download_and_generate_statistic(strategy,symbol)
+    rescue
+      puts $@
+      sleep 500
+    end
     puts "counter=#{counter},#{symbol},cost=#{Time.now-start} sec"
     
    #break
