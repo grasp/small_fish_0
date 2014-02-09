@@ -14,14 +14,15 @@ require File.expand_path("../../utility/read_daily_price_volume.rb",__FILE__)
   include StockWinLost
 
 #只报告一次，避免后面的重复计算
-  def download_and_generate_statistic(strategy,symbol)
+  def download_and_generate_statistic(strategy,symbol,regeneration_flag)
 
 
   # 6. generate statistic file 
   statistic_file=File.join(Strategy.send(strategy).root_path,symbol,\
       Strategy.send(strategy).statistic,Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,"#{symbol}.txt")
 
-  unless File.exists?(statistic_file) #只有当统计文件没有产生的时候做
+ # return if regeneration_flag==false &&  File.exists?(statistic_file)
+ # unless File.exists?(statistic_file) #只有当统计文件没有产生的时候做
    # 1.  初始化一些文件夹
      initialize_singl_stock_folder(strategy,symbol)
 
@@ -58,7 +59,7 @@ require File.expand_path("../../utility/read_daily_price_volume.rb",__FILE__)
 
 
    generate_counter_for_percent(strategy,symbol)
-  end
+  #end
   
   end #end of report_strategy_history
 
@@ -70,10 +71,11 @@ require File.expand_path("../../utility/read_daily_price_volume.rb",__FILE__)
     start=Time.now
     next if symbol=="600631.ss"
     begin
-    download_and_generate_statistic(strategy,symbol)
-    rescue
+    download_and_generate_statistic(strategy,symbol,false)
+    rescue TypeError
       puts $@
-      sleep 500
+     # next
+     # sleep 500
     end
     puts "counter=#{counter},#{symbol},cost=#{Time.now-start} sec"
     
