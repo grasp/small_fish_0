@@ -27,7 +27,14 @@ end
 def scan_signal_on_date_by_strategy(strategy,date,symbol,signal_array,statistic_array)  
 
 
+   # counter_freq_folder=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
+   # Strategy.send(strategy).end_date,win_expect,count_freq)
 
+   # Dir.mkdir(counter_freq_folder) unless File.exists?(counter_freq_folder)
+
+   # buy_record_folder=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
+   # Strategy.send(strategy).end_date,win_expect,count_freq,"buy_record")
+   # Dir.mkdir(buy_record_folder) unless File.exists?(buy_record_folder)
 
    # buy_record_path=File.expand_path("#{date}.txt",buy_record_folder)
 
@@ -36,7 +43,7 @@ def scan_signal_on_date_by_strategy(strategy,date,symbol,signal_array,statistic_
 
     if statistic_array.size==0
      # puts "statistic_array size ==0"
-    return 
+    return  nil
     end
 
     statistic_array.each do |line|
@@ -50,7 +57,7 @@ def scan_signal_on_date_by_strategy(strategy,date,symbol,signal_array,statistic_
     
      #puts "date =#{date},real_signal=#{real_signal},result[0]=#{result[0]}"
     if real_signal==result[0] #如果信号和发生次数多的相符合，那就是购买信号
-     # puts "date #{date} will buy"
+      puts "date #{date} will buy"
      return date
     end
   end
@@ -58,18 +65,6 @@ return nil
 end
 
 def generate_future_buy_list(strategy,symbol,regenerate_flag)
-
-    win_expect=Strategy.send(strategy).win_expect
-    count_freq=Strategy.send(strategy).count_freq
-    counter_freq_folder=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
-    Strategy.send(strategy).end_date,win_expect,count_freq)
-
-    Dir.mkdir(counter_freq_folder) unless File.exists?(counter_freq_folder)
-
-    buy_record_folder=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
-    Strategy.send(strategy).end_date,win_expect,count_freq,"buy_record")
-    Dir.mkdir(buy_record_folder) unless File.exists?(buy_record_folder)
-
       #buy_list_done_txt=File.join()
     buy_list=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
     Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,Strategy.send(strategy).count_freq,"buy_record","buy_list.txt")
@@ -82,9 +77,7 @@ def generate_future_buy_list(strategy,symbol,regenerate_flag)
 
 #第一步，载入信号文件
    signal_file=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).signal_path,"#{symbol}.txt")
-   
    signal_array=File.read(signal_file).split("\n")
-   return nil if signal_array.size==0
    first_line=signal_array.shift(1)[0]
    signal_keys=JSON.parse(first_line)
 
@@ -107,6 +100,11 @@ def generate_future_buy_list(strategy,symbol,regenerate_flag)
     count=count_freq_array[1].to_i
     already_win_percent=count_freq_array[3].to_f
 
+ #   count=5
+  #  already_win_percent=100
+
+    puts "count=#{count},already_win_percent=#{already_win_percent}"
+
    #可能买的信号
     potential_buy_contents=File.read(win_lost_statistic_path).split("\n")
     will_buy_array=[]
@@ -126,10 +124,7 @@ def generate_future_buy_list(strategy,symbol,regenerate_flag)
     unless (date.wday==6 || date.wday==0)
     next if raw_signal_hash[date.to_s].nil?
       result=scan_signal_on_date_by_strategy(strategy,date,symbol,raw_signal_hash[date.to_s],will_buy_array)
-    unless result.nil?
-     # puts "#{symbol},#{date} will_buy"
-      buy_list_file << (result.to_s + "\n")
-    end
+      buy_list_file << (result.to_s + "\n") unless result.nil?
     end
   end
  end
