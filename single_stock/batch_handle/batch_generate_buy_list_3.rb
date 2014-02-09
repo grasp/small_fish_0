@@ -18,8 +18,12 @@ include StockBuyRecord
  	counter+=1  
  	next if counter <1000  
  	start=Time.now
-    symbol=symbol_array[index]   
-    generate_future_buy_list("hundun_1",symbol)
+    symbol=symbol_array[index]  
+    begin 
+      generate_future_buy_list("hundun_1",symbol)
+    rescue
+    	puts $@
+    end
     puts "counter=#{counter},#{symbol},cost=#{Time.now-start}"
   end
 

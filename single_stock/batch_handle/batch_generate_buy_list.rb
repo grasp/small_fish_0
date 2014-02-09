@@ -15,8 +15,12 @@ include StockBuyRecord
   (symbol_array.size-1).downto(0).each do |index|  
     counter+=1
  	start=Time.now
-    symbol=symbol_array[index]   
+    symbol=symbol_array[index] 
+    begin  
     generate_future_buy_list("hundun_1",symbol)
+    rescue
+     puts $@
+    end
     puts "counter=#{counter},#{symbol},cost=#{Time.now-start}"
   end
 
