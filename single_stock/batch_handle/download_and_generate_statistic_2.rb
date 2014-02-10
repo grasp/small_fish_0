@@ -14,7 +14,7 @@ require File.expand_path("../../utility/read_daily_price_volume.rb",__FILE__)
   include StockWinLost
 
 #只报告一次，避免后面的重复计算
-  def download_and_generate_statistic(strategy,symbol, regeneration_flag)
+  def download_and_generate_statistic(strategy,symbol)
 
 
   # 6. generate statistic file 
@@ -75,7 +75,7 @@ require File.expand_path("../../utility/read_daily_price_volume.rb",__FILE__)
     counter+=1
     start=Time.now
      begin
-    download_and_generate_statistic(strategy,symbol,false)
+    download_and_generate_statistic(strategy,symbol)
   rescue TypeError
     puts $@
      end

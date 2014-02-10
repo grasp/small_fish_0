@@ -12,11 +12,8 @@ require File.expand_path("../../buy_record/report_total_win_percent.rb",__FILE__
   $all_stock_list.keys.each do |symbol|
     counter+=1
 
-   # download_and_generate_statistic(strategy,symbol,true)
-
-
       signal_file_path=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).signal_path,"#{symbol}.txt")
 
       File.delete(signal_file_path) if File.exists?(signal_file_path)
-    puts "counter=#{counter},#{symbol}"
+      puts "counter=#{counter},#{symbol}"
   end
