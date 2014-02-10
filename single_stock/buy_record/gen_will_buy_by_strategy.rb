@@ -57,7 +57,7 @@ def scan_signal_on_date_by_strategy(strategy,date,symbol,signal_array,statistic_
 return nil
 end
 
-def generate_future_buy_list(strategy,symbol,regenerate_flag)
+def generate_future_buy_list(strategy,symbol)
 
     win_expect=Strategy.send(strategy).win_expect
     count_freq=Strategy.send(strategy).count_freq
@@ -76,7 +76,7 @@ def generate_future_buy_list(strategy,symbol,regenerate_flag)
 
    raw_signal_hash=Hash.new
 
-  if  regenerate_flag==true || (not File.exists?(buy_list))
+  if not File.exists?(buy_list)
 
     win_expect=Strategy.send(strategy).win_expect
 

@@ -8,7 +8,7 @@ require File.expand_path("../../buy_record/report_total_win_percent.rb",__FILE__
 
 include StockBuyRecord
 
-def batch_report_win_lost_on_buy_list(strategy,regeneration_flag)
+def batch_report_win_lost_on_buy_list(strategy)
   symbol_array=$all_stock_list.keys
 
   counter=0
@@ -60,5 +60,5 @@ report_file.close
 end
 
 if $0==__FILE__
-  batch_report_win_lost_on_buy_list("hundun_1",false)
+  batch_report_win_lost_on_buy_list("hundun_1")
 end

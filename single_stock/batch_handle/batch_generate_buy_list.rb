@@ -10,7 +10,7 @@ require File.expand_path("../../buy_record/gen_will_buy_by_strategy.rb",__FILE__
 include StockBuyRecord
 
 
-def batch_generate_buy_list(strategy, regeneration_flag)
+def batch_generate_buy_list(strategy)
 
   symbol_array=$all_stock_list.keys
   counter=0
@@ -19,7 +19,7 @@ def batch_generate_buy_list(strategy, regeneration_flag)
     start=Time.now
     symbol=symbol_array[index]  
    next if symbol=="600631"
-    generate_future_buy_list(strategy,symbol,regeneration_flag)
+    generate_future_buy_list(strategy,symbol)
     puts "generate buy list:#{counter},#{symbol},cost=#{Time.now-start}"
   end
 
@@ -27,7 +27,7 @@ end
 
 
 if $0==__FILE__
-  batch_generate_buy_list("hundun_1", false)
+  batch_generate_buy_list("hundun_1")
 end
 
 
