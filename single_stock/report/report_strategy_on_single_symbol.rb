@@ -26,7 +26,7 @@ module StockReport
   include StockBuyRecord
 
 #只报告一次，避免后面的重复计算
-  def report_strategy_history(strategy,symbol,regenrate_flag)
+  def report_strategy_history(strategy,symbol)
 
    expected_report=Strategy.send(strategy).end_date+"_"+Strategy.send(strategy).win_expect+"_"+Strategy.send(strategy).count_freq+".txt"
    
@@ -34,7 +34,7 @@ module StockReport
        Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,Strategy.send(strategy).count_freq,Strategy.send(strategy).single_report,expected_report)
 
    #加了一个是否需要重新生成报告的flag
-      return if File.exists?(report_file) && regenrate_flag==false
+      return if File.exists?(report_file)
 
    # 1.  初始化一些文件夹
      initialize_singl_stock_folder(strategy,symbol)

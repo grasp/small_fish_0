@@ -29,6 +29,7 @@ report_hash=Hash.new
     start=Time.now
     symbol=symbol_array[index] 
 
+next if symbol=="600631.ss"
   single_report=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
     Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,Strategy.send(strategy).count_freq,"report")
    Dir.mkdir(single_report) unless File.exists?(single_report)
@@ -43,7 +44,7 @@ if File.exists?(buy_list)
   if File.stat(buy_list).size >0
    # puts "counter=#{counter},#{symbol},cost=#{Time.now-start}"
     # generate_future_buy_list("hundun_1",symbol,true)
-    result=report_total_win_percent(strategy,symbol,false)
+    result=report_total_win_percent(strategy,symbol)
     report_hash[symbol]=result unless result.nil?
     counter+=1 
   end
@@ -58,6 +59,9 @@ end
 report_file.close
 
 end
+
+
+
 
 if $0==__FILE__
   batch_report_win_lost_on_buy_list("hundun_1")

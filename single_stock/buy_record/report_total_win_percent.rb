@@ -26,7 +26,7 @@ module StockBuyRecord
  end
 
 #只报告一次，避免重复报告
- def report_total_win_percent(strategy,symbol,regenrate_flag)
+ def report_total_win_percent(strategy,symbol)
 
    expected_report_file=Strategy.send(strategy).end_date+"_"+Strategy.send(strategy).win_expect+"_"+Strategy.send(strategy).count_freq+".txt"
    
@@ -37,7 +37,7 @@ module StockBuyRecord
    #加了一个是否需要重新生成报告的flag
   #  if File.exists?(report_file) && regenrate_flag==false
    #   if regenrate_flag==true || ( not File.exists?(report_file))
-     if regenrate_flag==false &&  File.exists?(report_file)
+     if  File.exists?(report_file)
 
       result=File.read(report_file)
       puts "alread generated =#{result}"

@@ -49,7 +49,7 @@ def scan_signal_on_date_by_strategy(strategy,date,symbol,signal_array,statistic_
     real_signal=signal_index[0].to_s+"_"+signal_index[1].to_s+"_"+signal_array[signal_index[0].to_i].to_s.strip+signal_array[signal_index[1].to_i].to_s.strip
     
      #puts "date =#{date},real_signal=#{real_signal},result[0]=#{result[0]}"
-    if real_signal==result[0] #如果信号和发生次数多的相符合，那就是购买信号
+    if real_signal==result[0] # && real_signal.match("truetrue") #如果信号和发生次数多的相符合，那就是购买信号
      # puts "date #{date} will buy"
      return date
     end
@@ -114,7 +114,7 @@ def generate_future_buy_list(strategy,symbol)
     potential_buy_contents.each do |line|
       result_array=JSON.parse(line.split("#")[1])
      # puts "result_array[1]=#{result_array[1]},result_array[3]=#{result_array[3]}"
-      will_buy_array<< line if result_array[1].to_i>=count && (result_array[3].to_f*100)>=already_win_percent #必须乘以100
+      will_buy_array<< line if result_array[1].to_i>=count &&  result_array[1].to_i<10 && (result_array[3].to_f*100)>=already_win_percent #必须乘以100
     end
 
   buy_list_file=File.new(buy_list,"w+")

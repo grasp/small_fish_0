@@ -155,7 +155,7 @@ def generate_all_win_lost(stragety)
 
 		 if File.exists?(signal_file) && (not File.exists?(win_lost_statistic))
 		   generate_counter_for_percent(symbol,folder,stragety)
-	     end
+	   end
 	end
 end
 end

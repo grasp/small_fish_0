@@ -21,7 +21,8 @@ require File.expand_path("../../utility/read_daily_price_volume.rb",__FILE__)
   statistic_file=File.join(Strategy.send(strategy).root_path,symbol,\
       Strategy.send(strategy).statistic,Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,"#{symbol}.txt")
 
- # return if regeneration_flag==false &&  File.exists?(statistic_file)
+#puts statistic_file
+  return   if File.exists?(statistic_file)
  # unless File.exists?(statistic_file) #只有当统计文件没有产生的时候做
    # 1.  初始化一些文件夹
      initialize_singl_stock_folder(strategy,symbol)
@@ -59,6 +60,7 @@ require File.expand_path("../../utility/read_daily_price_volume.rb",__FILE__)
 
 
    generate_counter_for_percent(strategy,symbol)
+
   #end
   
   end #end of report_strategy_history

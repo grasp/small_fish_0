@@ -18,7 +18,7 @@ def batch_generate_buy_list(strategy)
     counter+=1
     start=Time.now
     symbol=symbol_array[index]  
-   next if symbol=="600631"
+   next if symbol=="600631.ss"
     generate_future_buy_list(strategy,symbol)
     puts "generate buy list:#{counter},#{symbol},cost=#{Time.now-start}"
   end
