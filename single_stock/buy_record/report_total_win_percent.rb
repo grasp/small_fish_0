@@ -75,8 +75,6 @@ module StockBuyRecord
       end
       return nil
  end
-
-
 end
 
 if $0==__FILE__
