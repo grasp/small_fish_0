@@ -1,0 +1,28 @@
+hundun_1:
+  root_path: "d:/feishu_five_year_A"
+  price_database: daily_k.db
+  coarse_database: coarse_data.db
+  signal_database: signal.db
+  #root_path: "e:/feishu_A"
+  log_name: "log/feishu.log"
+  raw_data: "raw_data"
+  working_year: "2014.xt"
+  history_data: "history_data"
+  history_length: 1000
+  daily_data: "daily_data"
+  raw_data_process: "raw_data_process"
+  signal_path: "signal"
+  win_lost_path: "win_lost"
+  statistic: "statistic"
+  start_date: "2000-01-01"
+  end_date: "2012-12-30"
+  win_expect: "percent_10_num_2_days"
+  count_freq: "count_5_percent_80"
+  triple_filter: "count_10_percent_51"
+  buy_record: "buy_record"
+  total_report: "total_report"
+  single_report:  "report"
+
+
+
+

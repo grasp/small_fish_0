@@ -8,7 +8,7 @@ module StockUtility
       $strategy_config=Strategy.send(strategy)
 
 	   #mk root path
-	$root_path=$strategy_config.root_path
+	    $root_path=$strategy_config.root_path
       Dir.mkdir($root_path)  unless File.exists?($root_path)
 
       #mk symbol folder
