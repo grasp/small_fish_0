@@ -131,8 +131,6 @@ def batch_generate_single_signal_statistic(strategy)
 #***********************************************************************************#
 #根据单个信号的统计来买卖，看看效果如何呢？
 #***********************************************************************************#
-
-
 def generate_single_signal_buy_record(strategy,symbol)
 
     win_expect=Strategy.send(strategy).win_expect

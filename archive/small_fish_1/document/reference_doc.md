@@ -55,3 +55,8 @@ end
 具体migration api参考
 
 http://api.rubyonrails.org/classes/ActiveRecord/Migration.html
+
+Dir.glob('**/*.{sh,rb,tcl}').each do |fn|
+  content = File.read(fn).gsub('xxxx', 'yyyy')
+  File.open(fn, 'w') { |f| f << content }
+end 
