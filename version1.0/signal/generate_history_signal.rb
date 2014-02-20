@@ -4,9 +4,21 @@ require File.expand_path("../low_price_signal.rb",__FILE__)
 require File.expand_path("../high_price_signal.rb",__FILE__)
 require File.expand_path("../open_signal.rb",__FILE__)
 require File.expand_path("../volume_signal.rb",__FILE__)
+require File.expand_path("../raw_data_process/generate_history_raw_data_process.rb")
+
 module StockSignal
     include StockUtility
-def save_all_signal_to_file(strategy,symbol)
+def generate_history_signal(strategy,symbol)
+
+    #假如Raw_data_process还没有生成，那就我们帮忙生成一次
+    raw_data_process=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).raw_data_process,"#{symbol}.txt")
+    unless File.exists?(raw_data_process)
+       generate_raw_data_process(strategy,symbol) 
+    end
+
+    #如果此时还没有初步加工数据，只好退出了
+    return unless File.exists?(raw_data_process)
+
      #各种信号放到一起用于保存的Hash
 	  save_hash={}
 
@@ -32,26 +44,12 @@ def save_all_signal_to_file(strategy,symbol)
      total_size=full_macd_array.size
 
      full_price_array.each_index do |index|
-
        	date=full_price_array[index][0]
-        #puts "#{date} and index=#{index}" 
 
-       # print "#index #{index} date= #{date}"
-        #puts date
-       #
-       #
-        #next if index==total_size-1
-       # puts "macd"+full_macd_array[index][0]
         macd_signal_hash=judge_full_macd_signal(full_macd_array,index,total_size) 
-       # puts "low price"+full_low_price_array[index][0]
         low_price_signal_hash=low_price_signal(full_low_price_array,full_price_array,index)
-        #puts "high"+full_high_price_array[index][0]
-
         high_price_signal_hash=high_price_signal(full_high_price_array,full_price_array,index)
-
-        #puts "volume"+full_volume_array[index][0]
-        volume_signal_hash=generate_volume_sigmal_by_full(strategy,full_volume_array,index)
-        
+        volume_signal_hash=generate_volume_sigmal_by_full(strategy,full_volume_array,index)        
         open_signal=generate_open_signal(strategy,full_price_array,index)
 
         save_hash[date]=macd_signal_hash.merge(low_price_signal_hash).merge(high_price_signal_hash).merge(volume_signal_hash).merge(open_signal)
@@ -60,9 +58,7 @@ def save_all_signal_to_file(strategy,symbol)
  # signal_file_path=File.expand_path("./#{symbol}.txt",$signal_path)
   signal_file_path=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).signal_path,"#{symbol}.txt")
 
- # unless File.exists?(signal_file_path)
    first_line_flag=true
-   #puts signal_file_path
    signal_file=File.new(signal_file_path,"w+")
 
    save_hash.each do |date,s_hash|
@@ -71,37 +67,29 @@ def save_all_signal_to_file(strategy,symbol)
      signal_file<<s_hash.values.to_s+"\n"
      first_line_flag=false  
    end
-   #puts save_hash
    signal_file.close
-  #end
-
 end
 
-def test_save_one_symbol(strategy,symbol)
-  save_all_signal_to_file(strategy,symbol)
-end
 
-def test_save_all_signal
-
+def batch_generate_history_signal(strategy)
    count=0
-   strategy="hundun_1"
-   init_strategy(strategy)
-    $all_stock_list.keys.each do |stock_id|
-      target_file_path=File.expand_path("./#{stock_id}.txt",$signal_path) 
-      processed_file_path=File.expand_path("./#{stock_id}.txt",$data_process_path)
 
-        #源文件存在，并且目标文件不存在
-        if (not File.exists?(target_file_path)) && File.exists?(processed_file_path)
+    $all_stock_list.keys.each do |stock_id|
+      #假设文件夹的初始化已经完成
+
+      target_file_path=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).signal_path,"#{symbol}.txt")
+      next if File.exists?(target_file_path) && File.stat(target_file_path).size>0
+
+      #源文件存在，并且目标文件不存在
          count+=1
-         save_all_signal_to_file(strategy,stock_id)
-         puts "count=#{count}"
-        end
-      end
+         generate_history_signal(strategy,stock_id)
+         puts "count=#{count},symbol=#{symbol}"
+       end
 end
 end
 if $0==__FILE__
   include StockSignal
    # test_save_all_signal
-   test_save_one_symbol("hundun_1","000004.sz")
+   generate_history_signal("hundun_1","000004.sz")
  end
 

@@ -35,24 +35,38 @@ end
 def batch_download_yahoo_history(strategy)
    counter=0
    empty_counter=0
+   start=Time.now
+   empty_symbol=[]
    $all_stock_list.keys.each do |symbol|
+
+      initialize_singl_stock_folder(strategy,symbol)
+
       target_folder=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).raw_data,Strategy.send(strategy).history_data)
       symbol_file_name=File.expand_path("#{symbol}.txt",target_folder)
+
       next if File.exists?(symbol_file_name) && File.stat(symbol_file_name).size > 0
+
       begin
         download_yahoo_history(strategy,symbol)
         #TODO 需要增加特殊异常处理，如果yahoo拒绝下载，需要多等一下
-      rescue Exception
+      rescue 
          File.delete(symbol_file_name) if File.exists?(symbol_file_name)
          empty_counter+=1
+         empty_symbol<<symbol
          next
       end
 
       counter+=1
-      empty_counter+=1 if File.stat(symbol_file_name).size == 0
-      puts "counter=#{counter},symbol=#{symbol}" if (counter/2) == 0 
+      if File.stat(symbol_file_name).size == 0
+        empty_counter+=1; empty_symbol<<symbol 
+      end
+
+      puts "counter=#{counter},symbol=#{symbol}" if (counter%2) == 0 
+      sleep 8
+
    end
-    puts "empty counter=#{empty_counter}"
+    puts "empty counter=#{empty_counter},cost #{Time.now-start}"
+    empty_symbol#返回下载失败的symbol
 end
 
 if $0==__FILE__
@@ -60,5 +74,6 @@ if $0==__FILE__
 	strategy="hundun_1"
 	symbol="000001.ss"
   initialize_singl_stock_folder(strategy,symbol)
-	StockRawData::download_yahoo_history(strategy,symbol)
+	#StockRawData::download_yahoo_history(strategy,symbol)
+  batch_download_yahoo_history(strategy)
 end
