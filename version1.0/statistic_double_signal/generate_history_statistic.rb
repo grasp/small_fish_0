@@ -135,7 +135,7 @@ Dir.mkdir(win_lost_statistic_folder) unless File.exists?(win_lost_statistic_fold
 base_statistic_folder=File.join(Strategy.send(stragety).root_path,symbol,Strategy.send(stragety).statistic,end_date,percent_num_day_folder,"base_statistic")
 Dir.mkdir(base_statistic_folder) unless File.exists?(base_statistic_folder)
 
-win_lost_statistic=File.join(base_statistic_folderr,"#{symbol}.txt")
+win_lost_statistic=File.join(base_statistic_folder,"#{symbol}.txt")
 
 s_file= File.new(win_lost_statistic,"w+")
 
@@ -174,7 +174,7 @@ if $0==__FILE__
  #win_percent_folder="percent_5_num_5"
  # folder="percent_3_num_9_days"
  #generate_all_win_lost(strategy)
- symbol="000005.sz"
+ symbol="000002.sz"
  #generate_counter_for_percent(strategy,symbol,20,2,"2012-12-30")
  generate_double_signal_statistic(strategy,symbol)
  puts "cost=#{Time.now-start}"
