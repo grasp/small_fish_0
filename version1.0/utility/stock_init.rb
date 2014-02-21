@@ -57,6 +57,10 @@ module StockUtility
       count_freq_path=File.expand_path($strategy_config.count_freq,win_expect_path)
       Dir.mkdir(count_freq_path) unless File.exists?(count_freq_path)
 
+      #统计基础文件夹
+      base_statistic_folder=File.expand_path("base_statistic",win_expect_path)
+      Dir.mkdir(base_statistic_folder) unless File.exists?(base_statistic_folder)
+
       #buy_record
       buy_record_path=File.expand_path($strategy_config.buy_record,count_freq_path)
       Dir.mkdir(buy_record_path) unless File.exists?(buy_record_path)

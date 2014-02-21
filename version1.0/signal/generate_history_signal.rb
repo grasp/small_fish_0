@@ -8,6 +8,7 @@ require File.expand_path("../raw_data_process/generate_history_raw_data_process.
 
 module StockSignal
     include StockUtility
+    include StockRawDataProcess
 def generate_history_signal(strategy,symbol)
 
     #假如Raw_data_process还没有生成，那就我们帮忙生成一次
@@ -74,7 +75,7 @@ end
 def batch_generate_history_signal(strategy)
    count=0
 
-    $all_stock_list.keys.each do |stock_id|
+    $all_stock_list.keys.each do |symbol|
       #假设文件夹的初始化已经完成
 
       target_file_path=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).signal_path,"#{symbol}.txt")
@@ -82,7 +83,7 @@ def batch_generate_history_signal(strategy)
 
       #源文件存在，并且目标文件不存在
          count+=1
-         generate_history_signal(strategy,stock_id)
+         generate_history_signal(strategy,symbol)
          puts "count=#{count},symbol=#{symbol}"
        end
 end
@@ -90,6 +91,8 @@ end
 if $0==__FILE__
   include StockSignal
    # test_save_all_signal
-   generate_history_signal("hundun_1","000004.sz")
+  # generate_history_signal("hundun_1","000004.sz")
+  strategy="hundun_1"
+  batch_generate_history_signal(strategy)
  end
 

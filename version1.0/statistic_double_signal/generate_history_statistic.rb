@@ -1,10 +1,12 @@
 require File.expand_path("../../utility/utility.rb",__FILE__)
 require File.expand_path("../../utility/read_daily_price_volume.rb",__FILE__)
+require File.expand_path("../../signal/generate_history_signal.rb",__FILE__)
 require File.expand_path("../generate_win_lost.rb",__FILE__)
 require 'json'
 
 module StockWinLost
   include StockUtility
+  include StockSignal
 def generate_win_lost_counter()
 	win_lost=File.expand_path("./win_lost","#{AppSettings.resource_path}")
 	Dir.new(win_lost).each do |folder|
@@ -13,9 +15,9 @@ def generate_win_lost_counter()
 end
 
 #统计输赢的信号比例
-def generate_counter_for_percent(stragety,symbol)
+def generate_double_signal_statistic(stragety,symbol)
 
-   # percent_num_day_folder="percent_#{percent}_num_#{number_day}_days"
+    #percent_num_day_folder="percent_#{percent}_num_#{number_day}_days"
     percent_num_day_folder=Strategy.send(stragety).win_expect
     #puts "stragety=#{stragety},percent_num_day_folder=#{percent_num_day_folder}"
 
@@ -29,10 +31,13 @@ def generate_counter_for_percent(stragety,symbol)
     signal_file=File.join(Strategy.send(stragety).root_path,symbol,Strategy.send(stragety).signal_path,"#{symbol}.txt")
     win_lost_file=File.join(Strategy.send(stragety).root_path,symbol,Strategy.send(stragety).win_lost_path,percent_num_day_folder,"#{symbol}.txt")
 
-  #here generate winlost file if not exist
-  unless File.exists?(win_lost_file)
-    generate_win_lost(stragety,symbol,percent,number_day)
-  end
+    unless File.exists?(signal_file)
+      generate_history_signal(stragety,symbol)
+    end
+    #here generate winlost file if not exist
+    unless File.exists?(win_lost_file)
+      generate_win_lost(stragety,symbol)
+    end
   
     win_lost_array=File.read(win_lost_file).split("\n")
 
@@ -127,8 +132,10 @@ Dir.mkdir(end_date_folder) unless File.exists?(end_date_folder)
 win_lost_statistic_folder=File.join(Strategy.send(stragety).root_path,symbol,Strategy.send(stragety).statistic,end_date,percent_num_day_folder)
 Dir.mkdir(win_lost_statistic_folder) unless File.exists?(win_lost_statistic_folder)
 
-win_lost_statistic=File.join(Strategy.send(stragety).root_path,symbol,Strategy.send(stragety).statistic,end_date,percent_num_day_folder,"#{symbol}.txt")
+base_statistic_folder=File.join(Strategy.send(stragety).root_path,symbol,Strategy.send(stragety).statistic,end_date,percent_num_day_folder,"base_statistic")
+Dir.mkdir(base_statistic_folder) unless File.exists?(base_statistic_folder)
 
+win_lost_statistic=File.join(base_statistic_folderr,"#{symbol}.txt")
 
 s_file= File.new(win_lost_statistic,"w+")
 
@@ -141,7 +148,7 @@ s_file.close
 end
 
 
-def generate_all_win_lost(stragety)
+def batch_generate_double_signal_statistic(stragety)
     #folder="percent_1_num_1_days"
     folder=AppSettings.send(stragety).win_expect
     counter=0
@@ -152,9 +159,9 @@ def generate_all_win_lost(stragety)
 		puts "#{symbol},#{counter}"
 		 signal_file=File.expand_path("./#{symbol}.txt",$signal_path)
 		 win_lost_statistic=File.expand_path("./#{folder}/#{symbol}.txt",$end_date_path)
-
 		 if File.exists?(signal_file) && (not File.exists?(win_lost_statistic))
-		   generate_counter_for_percent(symbol,folder,stragety)
+		  # generate_double_signal_statistic(symbol,folder,stragety)
+       generate_double_signal_statistic(strategy,symbol)
 	   end
 	end
 end
@@ -169,6 +176,6 @@ if $0==__FILE__
  #generate_all_win_lost(strategy)
  symbol="000005.sz"
  #generate_counter_for_percent(strategy,symbol,20,2,"2012-12-30")
- generate_counter_for_percent(strategy,symbol)
+ generate_double_signal_statistic(strategy,symbol)
  puts "cost=#{Time.now-start}"
 end
