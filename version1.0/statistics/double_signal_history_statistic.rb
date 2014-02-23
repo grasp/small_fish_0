@@ -1,7 +1,7 @@
 require File.expand_path("../../utility/utility.rb",__FILE__)
 require File.expand_path("../../utility/read_daily_price_volume.rb",__FILE__)
 require File.expand_path("../../signal/generate_history_signal.rb",__FILE__)
-require File.expand_path("../generate_win_lost.rb",__FILE__)
+require File.expand_path("../../utility/generate_win_lost.rb",__FILE__)
 require 'json'
 
 module StockWinLost
@@ -31,9 +31,9 @@ def generate_double_signal_statistic(stragety,symbol)
     signal_file=File.join(Strategy.send(stragety).root_path,symbol,Strategy.send(stragety).signal_path,"#{symbol}.txt")
     win_lost_file=File.join(Strategy.send(stragety).root_path,symbol,Strategy.send(stragety).win_lost_path,percent_num_day_folder,"#{symbol}.txt")
 
-    unless File.exists?(signal_file)
+   # unless File.exists?(signal_file)
       generate_history_signal(stragety,symbol)
-    end
+  #  end
     #here generate winlost file if not exist
     unless File.exists?(win_lost_file)
       generate_win_lost(stragety,symbol)
@@ -75,8 +75,8 @@ ori_array_size=signal_keys.size
  total_size=ori_array_size
 
 iter_array.each do |cycle|
- iter_array[cycle].upto(total_size-1).each do |i|
- 	possible_zuhe<<[cycle,i]
+ iter_array[cycle].upto(total_size-2).each do |i|
+ 	possible_zuhe<<[cycle,i+1]
  end
 end
 #puts "possible_zuhe.size=#{possible_zuhe.size}"
@@ -99,6 +99,7 @@ signal_array=signal_hash[date]
 	key<<key_1<<signal_array[a]<<signal_array[b]
   if w_l=="true"
     win_hash[key]+=1
+    #puts "win date=#{date}"
   else
     lost_hash[key]+=1
   end	
@@ -122,7 +123,7 @@ end
 
 total_hash.each do |key,value|
 	total=value[0]+value[1]
-	total_hash[key]=[total,value[0],value[1],(value[0]/total.to_f)]
+	total_hash[key]=[total,value[0],value[1],(value[0]/total.to_f).round(4)]
 end
 
 #win_lost_statistic=File.expand_path("./#{folder}/#{symbol}.txt",$end_date_path)
@@ -140,8 +141,9 @@ win_lost_statistic=File.join(base_statistic_folder,"#{symbol}.txt")
 s_file= File.new(win_lost_statistic,"w+")
 
   total_hash.sort_by {|_key,_value| _value[3]}.reverse.each do |key,value|
+  result=key.to_s.split("_")
+  s_file<<key.to_s+"#"+value.to_s+"#"+"#{signal_keys[result[0].to_i]}"+"#"+"#{signal_keys[result[1].to_i]}"+"\n"
 
-  s_file<<key.to_s+"#"+value.to_s+"\n"
 end
 s_file.close
 
@@ -174,7 +176,7 @@ if $0==__FILE__
  #win_percent_folder="percent_5_num_5"
  # folder="percent_3_num_9_days"
  #generate_all_win_lost(strategy)
- symbol="000002.sz"
+ symbol="000005.sz"
  #generate_counter_for_percent(strategy,symbol,20,2,"2012-12-30")
  generate_double_signal_statistic(strategy,symbol)
  puts "cost=#{Time.now-start}"

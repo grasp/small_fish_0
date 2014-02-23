@@ -1,7 +1,7 @@
 require File.expand_path("../../utility/utility.rb",__FILE__)
 require File.expand_path("../../utility/stock_init.rb",__FILE__)
 require File.expand_path("../../utility/read_daily_price_volume.rb",__FILE__)
-require File.expand_path("../../win_lost/generate_win_lost.rb",__FILE__)
+require File.expand_path("../../utility/generate_win_lost.rb",__FILE__)
 require 'json'
 
 include StockWinLost
@@ -106,7 +106,7 @@ end
     single_statistic_file=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
       Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,"single_signal_statistic.txt")
      target_file=File.new(single_statistic_file,"w+")
-   
+   puts "single_statistic_file=#{single_statistic_file}"
 
       #total_statistic.sort_by
  total_statistic.sort_by {|_key,_value| _value[3]}.reverse.each do |key,value|
@@ -235,8 +235,6 @@ def generate_single_signal_buy_record(strategy,symbol)
   end
  end
  end
-
-
 
  win_lost_file=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).win_lost_path,Strategy.send(strategy).win_expect,"#{symbol}.txt")
 
@@ -381,17 +379,17 @@ if $0==__FILE__
  #win_percent_folder="percent_5_num_5"
  # folder="percent_3_num_9_days"
  #generate_all_win_lost(strategy)
- symbol="000009.sz"
+ symbol="000005.sz"
  initialize_singl_stock_folder(strategy,symbol)
  #generate_counter_for_percent(strategy,symbol,20,2,"2012-12-30")
 # generate_counter_for_percent(strategy,symbol)
- #generate_single_signal_statistic(strategy,symbol)
+ generate_single_signal_statistic(strategy,symbol)
 # batch_generate_single_signal_statistic(strategy)
 
 #calculate_stastistic_counter(strategy)
 #generate_single_signal_buy_record(strategy,symbol)
 
  #report_total_win_percent(strategy,symbol)
- report_all_symbol(strategy)
+ #report_all_symbol(strategy)
  puts "cost=#{Time.now-start}"
 end

@@ -12,6 +12,7 @@ def low_price_signal(full_low_price_array,full_price_array,back_day)
 	price_array=full_price_array[back_day]
 	#print low_price_array.to_s+"\n"
 	#print "price_array="+price_array.to_s+"\n"
+    low_price_signal_hash["lowest_2_day"]= (low_price_array[1][1].to_f >= price_array[1][3].to_f)
     low_price_signal_hash["lowest_3_day"]= (low_price_array[1][2].to_f >= price_array[1][3].to_f) 
     low_price_signal_hash["lowest_4_day"]= (low_price_array[1][3].to_f >= price_array[1][3].to_f) 
     low_price_signal_hash["lowest_5_day"]= (low_price_array[1][4].to_f >= price_array[1][3].to_f) 

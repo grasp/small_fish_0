@@ -26,7 +26,7 @@ module StockBuyRecord
  end
 
 #只报告一次，避免重复报告
- def report_total_win_percent(strategy,symbol)
+ def report_double_signal_win_percent(strategy,symbol)
 
    expected_report_file=Strategy.send(strategy).end_date+"_"+Strategy.send(strategy).win_expect+"_"+Strategy.send(strategy).count_freq+".txt"
    
@@ -52,7 +52,7 @@ module StockBuyRecord
       false_counter=0
 
       buy_record_file=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
-       Strategy.send(strategy).end_date,percent_num_day,count_freq,"buy_record","buy_list.txt")
+       Strategy.send(strategy).end_date,percent_num_day,count_freq,"buy_record","double_signal_buy_list.txt")
 
        if File.exists?(buy_record_file) && File.stat(buy_record_file).size >0
 
@@ -81,9 +81,9 @@ if $0==__FILE__
 	include StockBuyRecord
 
 	strategy="hundun_1"
-	symbol="601636.ss"
+	symbol="000002.sz"
 	date="2013-01-09"
  #puts report_win_percent_on_date(strategy,symbol,date)
  initialize_singl_stock_folder(strategy,symbol)
- report_total_win_percent(strategy,symbol,true)
+ report_double_signal_win_percent(strategy,symbol)
 end

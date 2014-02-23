@@ -9,6 +9,7 @@ require File.expand_path("../raw_data_process/generate_history_raw_data_process.
 module StockSignal
     include StockUtility
     include StockRawDataProcess
+    
 def generate_history_signal(strategy,symbol)
 
     #假如Raw_data_process还没有生成，那就我们帮忙生成一次
@@ -32,6 +33,7 @@ def generate_history_signal(strategy,symbol)
       #puts price_hash.to_a[1]
 
       #倒序？？ 为什么？？？
+      
       full_price_array=price_hash.to_a.reverse
 
     
@@ -50,7 +52,7 @@ def generate_history_signal(strategy,symbol)
         macd_signal_hash=judge_full_macd_signal(full_macd_array,index,total_size) 
         low_price_signal_hash=low_price_signal(full_low_price_array,full_price_array,index)
         high_price_signal_hash=high_price_signal(full_high_price_array,full_price_array,index)
-        volume_signal_hash=generate_volume_sigmal_by_full(strategy,full_volume_array,index)        
+        volume_signal_hash=generate_volume_sigmal_by_full(strategy,price_hash.to_a,full_volume_array,index)        
         open_signal=generate_open_signal(strategy,full_price_array,index)
 
         save_hash[date]=macd_signal_hash.merge(low_price_signal_hash).merge(high_price_signal_hash).merge(volume_signal_hash).merge(open_signal)
