@@ -10,12 +10,21 @@ require 'json'
 #输入-信号文件，-输出单个信号变化的输赢统计
 #单个信号从true->false,或者false->true对盈利的变化
 #******************************************************************************************#
-
+    include StockWinLost
+    include StockSignal
 def generate_single_signal_statistic(strategy,symbol)
 
    signal_file=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).signal_path,"#{symbol}.txt")
    win_lost_file=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).win_lost_path,Strategy.send(strategy).win_expect,"#{symbol}.txt")
      
+
+    #generate signal file if not exists
+
+    unless File.exists?(signal_file)
+      generate_history_signal(strategy,symbol)
+    end
+
+    return unless File.exists?(signal_file)
   #here generate winlost file if not exist
   unless File.exists?(win_lost_file)
   percent_num_day_folder_name=Strategy.send(strategy).win_expect

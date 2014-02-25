@@ -51,9 +51,13 @@ def generate_single_signal_buy_record(strategy,symbol,date,today_signal_array,ye
 
     statistic_hash.each do |key,value|
       #result_array=JSON.parse(line.split("#")[1])
+        #     print "\n#{value[1]},#{win_count_freq[1].to_i},#{value[3].to_f}\n"
       will_buy_array<< key.to_s+"#"+"#{value.to_s}"+"\n" if value[1].to_i>=win_count_freq[1].to_i && (value[3].to_f*100)>=win_count_freq[3].to_i #必须乘以100
       will_lost_array<< key.to_s+"#"+"#{value.to_s}"+"\n" if value[1].to_i>=lost_count_freq[1].to_i && ((1-value[3].to_f)*100)>=lost_count_freq[3].to_i #必须乘以100
     end
+
+     # print "will_buy_array=#{will_buy_array}\n"
+#      print "will_lost_array=#{will_lost_array}\n"
 
    lost_happen_count=0
    today_signal_array.each_index do |index|
@@ -71,13 +75,17 @@ def generate_single_signal_buy_record(strategy,symbol,date,today_signal_array,ye
     return [date,0,new_statistic_hash]
   end
 
+
+
    win_happen_count=0
    today_signal_array.each_index do |index|
    if today_signal_array[index] !=yesterday_signal_array[index]
       key=index.to_s+today_signal_array[index].to_s+"_"+yesterday_signal_array[index].to_s
-
+     
       will_buy_array.each do |line|
-      	if line.match(key)# && today_signal_array[signal_key_hash["t_ma2_bigger_ma5"]]=="true"
+
+      	if line.split("#")[0]==key# && today_signal_array[signal_key_hash["t_ma2_bigger_ma5"]]=="true"
+          # puts "key=#{key} line =#{line},match=#{line.match(key)}"
          win_happen_count+=1        
       	end
       end
@@ -104,6 +112,17 @@ def generate_will_buy_year(strategy,symbol,year)
        initialize_singl_stock_folder(strategy,symbol)
     end
 
+  #check statistic  file
+  win_lost_statistic_path=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
+    Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,"base_statistic","single_signal_statistic.txt")
+
+  #产生统计文件
+  unless File.exists?(win_lost_statistic_path)
+    generate_single_signal_statistic(strategy,symbol)
+  end
+
+ return unless File.exists?(win_lost_statistic_path)
+
    signal_file=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).signal_path,"#{symbol}.txt")
    raw_signal_hash=Hash.new
 
@@ -126,14 +145,7 @@ def generate_will_buy_year(strategy,symbol,year)
     win_lost_statistic_path=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
     Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,"base_statistic","single_signal_statistic.txt")
 
-  #产生统计文件
-  unless File.exists?(win_lost_statistic_path)
-  	generate_single_signal_statistic(strategy,symbol)
-  end
-
-   return unless File.exists?(win_lost_statistic_path)
-
-   statistic_hash=Hash.new
+    statistic_hash=Hash.new
    File.read(win_lost_statistic_path).split("\n").each do |line|
    	result=line.split("#")
    	statistic_hash[result[0]]=JSON.parse(result[1])
@@ -172,8 +184,12 @@ def generate_will_buy_year(strategy,symbol,year)
         new_statistic_hash=statistic_hash if new_statistic_hash.nil?
         result=generate_single_signal_buy_record(strategy,symbol,date.to_s,today_signal_array,yesterday_signal_array,win_lost_hash[date.to_s],new_statistic_hash)
         new_statistic_hash=result[2]
-     end
 
+     #如果有买卖的信号产生，写入到买卖文件列表中
+    if result[1]>0
+      buy_list_file << (result[0].to_s + "#"+result[1].to_s + "#"+"#{win_lost_hash[date.to_s]}"+"\n")     
+    end
+     end
 
    end
 end
@@ -188,6 +204,13 @@ end
  buy_list_file.close
 
 end
+end
+
+def batch_handle_single_signal_buy(strategy,stock_array)
+  stock_array.each do |symbol|
+    puts symbol
+    generate_will_buy_year(strategy,symbol,2013)
+  end
 end
 
 if $0==__FILE__
@@ -206,6 +229,7 @@ if $0==__FILE__
 
 	#generate_single_signal_buy_record(strategy,symbol)
 	#generate_single_signal_statistic(strategy,symbol)
-
-	generate_will_buy_year(strategy,symbol,2013)
+  stock_array=$all_stock_list.keys[200,300]
+#	generate_will_buy_year(strategy,symbol,2013)
+  batch_handle_single_signal_buy(strategy,stock_array)
 end

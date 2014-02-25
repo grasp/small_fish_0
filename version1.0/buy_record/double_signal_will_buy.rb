@@ -147,6 +147,7 @@ def generate_future_buy_list(strategy,symbol,date,win_lost_flag,statistic_hash)
     lost_probability=Strategy.send(strategy).lost_probability.split("_")
 
     statistic_hash.each do |key,value|
+
        will_buy_array<< key+"#"+value.to_s+"\n" if value[1].to_i>=count  && (value[3].to_f*100)>=already_win_percent #必须乘以100
        will_lost_array<<key+"#"+value.to_s+"\n" if value[1].to_i>=lost_probability[1].to_i && ((1-value[3].to_f)*100)>=lost_probability[3].to_i #必须乘以100
     end
@@ -175,7 +176,7 @@ def generate_future_buy_list(strategy,symbol,date,win_lost_flag,statistic_hash)
     end
     
     if lost_happen_count>0
-      print "lost_happen_count=#{lost_happen_count} ,#{date},#{win_lost_flag}\n" 
+      print "double signal-lost_happen_count=#{lost_happen_count} ,#{date},#{win_lost_flag}\n" 
       return [date,0,new_statistic_hash]  
     end
 
@@ -190,7 +191,7 @@ def generate_future_buy_list(strategy,symbol,date,win_lost_flag,statistic_hash)
       happen_count+=1 if real_signal==result[0] # && real_signal.match("truetrue") #如果信号和发生次数多的相符合，那就是购买信号
     end
 
-    print "happen count="+[date,happen_count].to_s+",#{win_lost_flag}"+"\n" if happen_count>0
+    print "double signal happen count="+[date,happen_count].to_s+",#{win_lost_flag}"+"\n" if happen_count>0
     return [date,happen_count,new_statistic_hash]
 
 end
