@@ -66,6 +66,8 @@ def generate_double_signal_statistic(stragety,symbol)
     end
   if result[0]<=end_date  #只统计某个时间段的
     signal_hash[result[0]]=temp
+  #else
+    #puts "bigger date #{result[0]}, #{end_date}"
   end
    end
 
@@ -79,8 +81,11 @@ iter_array.each do |cycle|
  	possible_zuhe<<[cycle,i+1]
  end
 end
-#puts "possible_zuhe.size=#{possible_zuhe.size}"
+
+#puts "possible_zuhe.size=#{possible_zuhe.size},ori_array_size =#{ori_array_size},signal_hash size=#{signal_hash.size}"
 #puts "possible_zuhe=#{possible_zuhe}"
+
+return if signal_hash.size==0 #如果信号hash没有，就不需要做什么了
 
 count=0
 win_hash=Hash.new{0}
@@ -106,6 +111,8 @@ signal_array=signal_hash[date]
 end
 end
 total_hash=Hash.new
+
+#puts "win_hash size=#{win_hash.size}"
 
 win_hash.each do |key,value|
 	if lost_hash.has_key?(key)
@@ -138,6 +145,7 @@ Dir.mkdir(base_statistic_folder) unless File.exists?(base_statistic_folder)
 
 win_lost_statistic=File.join(base_statistic_folder,"#{symbol}.txt")
 
+#puts "total_hash size=#{total_hash.size}"
 s_file= File.new(win_lost_statistic,"w+")
 
   total_hash.sort_by {|_key,_value| _value[3]}.reverse.each do |key,value|
@@ -176,7 +184,7 @@ if $0==__FILE__
  #win_percent_folder="percent_5_num_5"
  # folder="percent_3_num_9_days"
  #generate_all_win_lost(strategy)
- symbol="000005.sz"
+ symbol="000038.sz"
  #generate_counter_for_percent(strategy,symbol,20,2,"2012-12-30")
  generate_double_signal_statistic(strategy,symbol)
  puts "cost=#{Time.now-start}"

@@ -81,9 +81,9 @@ if $0==__FILE__
 	include StockBuyRecord
 
 	strategy="hundun_1"
-	symbol="000002.sz"
+	symbol="000040.sz"
 	date="2013-01-09"
  #puts report_win_percent_on_date(strategy,symbol,date)
  initialize_singl_stock_folder(strategy,symbol)
- report_double_signal_win_percent(strategy,symbol)
+print report_double_signal_win_percent(strategy,symbol)
 end

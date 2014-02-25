@@ -63,8 +63,8 @@ if $0==__FILE__
 	include StockUtility
 	include StockBuyRecord
     start=Time.now
-    batch_report_double_signal("hundun_1",$all_stock_list.keys[10..20])
-	#print report_single_symbol("hundun_1","000005.sz")
+    batch_report_double_signal("hundun_1",$all_stock_list.keys[80..85])
+	#print report_double_signal_single_symbol("hundun_1","000040.sz")
 	puts "cost time=#{Time.now-start}"
 
 end
