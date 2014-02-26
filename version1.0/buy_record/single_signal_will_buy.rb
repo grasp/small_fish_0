@@ -40,6 +40,7 @@ def generate_single_signal_buy_record(strategy,symbol,date,today_signal_array,ye
   	generate_single_signal_statistic(strategy,symbol)
   end
 
+
     win_count_freq=Strategy.send(strategy).single_win_freq.split("_")
     lost_count_freq=Strategy.send(strategy).single_lost_freq.split("_")
  
@@ -56,8 +57,28 @@ def generate_single_signal_buy_record(strategy,symbol,date,today_signal_array,ye
       will_lost_array<< key.to_s+"#"+"#{value.to_s}"+"\n" if value[1].to_i>=lost_count_freq[1].to_i && ((1-value[3].to_f)*100)>=lost_count_freq[3].to_i #必须乘以100
     end
 
+    # 现在更新统计hash,避免重复上当
+    today_signal_array.each_index do |index|
+       key=index.to_s+today_signal_array[index].to_s+"_"+yesterday_signal_array[index].to_s
+      # puts new_statistic_hash[key]
+       unless new_statistic_hash.has_key?(key)
+         new_statistic_hash[key]=[0,0,0,0]
+       end
+       new_statistic_hash[key][0]+=1
+       new_statistic_hash[key][1]+=1 if win_lost_flag=="true"
+       new_statistic_hash[key][2]+=1 if win_lost_flag=="false"
+       new_statistic_hash[key][3]= (new_statistic_hash[key][1].to_f/new_statistic_hash[key][0]).round(3)     
+     end
+
      # print "will_buy_array=#{will_buy_array}\n"
 #      print "will_lost_array=#{will_lost_array}\n"
+
+#puts "will_buy_array size=#{will_buy_array.size},will_lost_array.size=#{will_lost_array.size}"
+
+#信号太多，说明骗线多吗？避免风险，我们不做
+ return [date,0,new_statistic_hash] if will_buy_array.size>=Strategy.send(strategy).limited_win_signal
+
+return [date,0,new_statistic_hash] if today_signal_array[0]=="false"
 
    lost_happen_count=0
    today_signal_array.each_index do |index|
@@ -100,7 +121,7 @@ end
 
 
 
-def generate_will_buy_year(strategy,symbol,year)
+def generate_single_signal_will_buy_year(strategy,symbol,year)
 
 	buy_record=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
     Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,Strategy.send(strategy).count_freq,"buy_record")
@@ -121,7 +142,7 @@ def generate_will_buy_year(strategy,symbol,year)
     generate_single_signal_statistic(strategy,symbol)
   end
 
- return unless File.exists?(win_lost_statistic_path)
+   return unless File.exists?(win_lost_statistic_path)
 
    signal_file=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).signal_path,"#{symbol}.txt")
    raw_signal_hash=Hash.new
@@ -145,7 +166,7 @@ def generate_will_buy_year(strategy,symbol,year)
     win_lost_statistic_path=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
     Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,"base_statistic","single_signal_statistic.txt")
 
-    statistic_hash=Hash.new
+   statistic_hash=Hash.new
    File.read(win_lost_statistic_path).split("\n").each do |line|
    	result=line.split("#")
    	statistic_hash[result[0]]=JSON.parse(result[1])
@@ -161,7 +182,7 @@ def generate_will_buy_year(strategy,symbol,year)
         win_lost_hash[result[0]]=result[1]  
     end
 
-
+ buy_list_file=File.new(buy_list,"w+")
    date_hash=Hash.new{0}
 
    12.downto(1).each do |j|
@@ -196,10 +217,6 @@ end
 end
 end
 
- buy_list_file=File.new(buy_list,"w+")
- date_hash.each do |key,value|
-   buy_list_file<<key.to_s+"#"+value.to_s+"#{win_lost_hash[key.to_s]}"+"\n"
- end
 
  buy_list_file.close
 
@@ -209,7 +226,7 @@ end
 def batch_handle_single_signal_buy(strategy,stock_array)
   stock_array.each do |symbol|
     puts symbol
-    generate_will_buy_year(strategy,symbol,2013)
+    generate_single_signal_will_buy_year(strategy,symbol,2013)
   end
 end
 
@@ -229,7 +246,7 @@ if $0==__FILE__
 
 	#generate_single_signal_buy_record(strategy,symbol)
 	#generate_single_signal_statistic(strategy,symbol)
-  stock_array=$all_stock_list.keys[200,300]
+  stock_array=$all_stock_list.keys[200,200]
 #	generate_will_buy_year(strategy,symbol,2013)
   batch_handle_single_signal_buy(strategy,stock_array)
 end
