@@ -76,9 +76,9 @@ def generate_single_signal_buy_record(strategy,symbol,date,today_signal_array,ye
 #puts "will_buy_array size=#{will_buy_array.size},will_lost_array.size=#{will_lost_array.size}"
 
 #信号太多，说明骗线多吗？避免风险，我们不做
- return [date,0,new_statistic_hash] if will_buy_array.size>=Strategy.send(strategy).limited_win_signal
+  return [date,0,new_statistic_hash] if will_buy_array.size>=Strategy.send(strategy).limited_win_signal
 
-return [date,0,new_statistic_hash] if today_signal_array[0]=="false"
+  return [date,0,new_statistic_hash] if today_signal_array[0]=="false"
 
    lost_happen_count=0
    today_signal_array.each_index do |index|
@@ -92,20 +92,19 @@ return [date,0,new_statistic_hash] if today_signal_array[0]=="false"
    end
 
   if lost_happen_count>0
-  	print "lost_happen_count=#{lost_happen_count} on #{date},#{win_lost_flag}\n"
+  	#print "lost_happen_count=#{lost_happen_count} on #{date},#{win_lost_flag}\n"
     return [date,0,new_statistic_hash]
   end
 
 
-
+#此处为买入条件，增加一个额外条件
    win_happen_count=0
    today_signal_array.each_index do |index|
    if today_signal_array[index] !=yesterday_signal_array[index]
       key=index.to_s+today_signal_array[index].to_s+"_"+yesterday_signal_array[index].to_s
      
       will_buy_array.each do |line|
-
-      	if line.split("#")[0]==key# && today_signal_array[signal_key_hash["t_ma2_bigger_ma5"]]=="true"
+      	if line.split("#")[0]==key #&& today_signal_array[signal_key_hash["t_ma2_bigger_ma5"]]=="true"
           # puts "key=#{key} line =#{line},match=#{line.match(key)}"
          win_happen_count+=1        
       	end
@@ -113,7 +112,7 @@ return [date,0,new_statistic_hash] if today_signal_array[0]=="false"
    end 
    end
      if win_happen_count>0
-   	 print "win_happen_count=#{win_happen_count} on #{date},#{win_lost_flag}\n"
+   	# print "win_happen_count=#{win_happen_count} on #{date},#{win_lost_flag}\n"
    	end
 
  return [date,win_happen_count,new_statistic_hash]
@@ -123,7 +122,10 @@ end
 
 def generate_single_signal_will_buy_year(strategy,symbol,year)
 
-	buy_record=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
+   win_expect=Strategy.send(strategy).win_expect
+
+
+	 buy_record=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
     Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,Strategy.send(strategy).count_freq,"buy_record")
 
 
@@ -141,8 +143,8 @@ def generate_single_signal_will_buy_year(strategy,symbol,year)
   unless File.exists?(win_lost_statistic_path)
     generate_single_signal_statistic(strategy,symbol)
   end
-
-   return unless File.exists?(win_lost_statistic_path)
+  #如果还没有统计文件，就可以放弃了
+  return unless File.exists?(win_lost_statistic_path)
 
    signal_file=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).signal_path,"#{symbol}.txt")
    raw_signal_hash=Hash.new
@@ -161,6 +163,10 @@ def generate_single_signal_will_buy_year(strategy,symbol,year)
 
   signal_hash_array=raw_signal_hash.to_a
 
+  #load price_file for compare the real price
+  price_hash=get_price_hash_from_history(strategy,symbol)
+  price_array=price_hash.to_a
+  #print price_array
 
  #第二步，载入统计文件
     win_lost_statistic_path=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
@@ -194,9 +200,29 @@ def generate_single_signal_will_buy_year(strategy,symbol,year)
        today_signal_array=[]
        yesterday_signal_array=[]
 
+
+      today_index=0
+      price_array.each_index do |index|
+        if price_array[index][0]==date.to_s
+          today_index=index
+          break
+        end
+      end
+
+      today_price=price_array[today_index][1]
+      number_day=win_expect.split("_")[3].to_i
+     # print "number day=#{today_index+number_day} \n"
+     unless  today_index+number_day>=price_array.size
+      
+      future_price=price_array[today_index+number_day][1]  #number_day
+    else
+      future_price=price_array[today_index][1]  #number_day
+     end
+
       signal_hash_array.each_index do |index|
       	#puts "#{signal_hash_array[index][0]},#{date.to_s}"
-     if signal_hash_array[index][0]==date.to_s
+        #t_ma2_bigger_ma5 ==true
+     if signal_hash_array[index][0]==date.to_s #&& signal_hash_array[index][1][51]==true && signal_hash_array[index][1][10]==true && signal_hash_array[index][1][11]==true
      	#puts "=="
         today_signal_array=signal_hash_array[index][1]
         yesterday_signal_array=signal_hash_array[index-1][1]  
@@ -207,9 +233,19 @@ def generate_single_signal_will_buy_year(strategy,symbol,year)
         new_statistic_hash=result[2]
 
      #如果有买卖的信号产生，写入到买卖文件列表中
-    if result[1]>0
-      buy_list_file << (result[0].to_s + "#"+result[1].to_s + "#"+"#{win_lost_hash[date.to_s]}"+"\n")     
-    end
+
+     report_line=""
+     report_line<<(result[0].to_s + "#"+result[1].to_s + "#"+"#{win_lost_hash[date.to_s]}")  
+  
+     #hash 的值为几个基本数据，依次为开盘，最高，最低，收盘，成交量
+     report_line << "#" +(((future_price[3].to_f-today_price[3].to_f)/today_price[3].to_f)*100).round(2).to_s + "#" +(((future_price[1].to_f-today_price[3].to_f)/today_price[3].to_f)*100).round(2).to_s 
+     #report_line <<"#" +(( (future_price[3].to_f+(future_price[1].to_f-today_price[3].to_f)/2)/today_price[3].to_f)*100).round(2).to_s
+     report_line <<"\n"
+   #  report_line<<"#"+"#{today_price.to_s}"+"#{future_price.to_s}"+ "\n"
+     if result[1]>0 
+     #  print "#{symbol}-#{report_line}"
+       buy_list_file << report_line   
+     end
      end
 
    end
@@ -225,7 +261,7 @@ end
 
 def batch_handle_single_signal_buy(strategy,stock_array)
   stock_array.each do |symbol|
-    puts symbol
+   # puts "#{symbol}================================="
     generate_single_signal_will_buy_year(strategy,symbol,2013)
   end
 end
@@ -246,7 +282,7 @@ if $0==__FILE__
 
 	#generate_single_signal_buy_record(strategy,symbol)
 	#generate_single_signal_statistic(strategy,symbol)
-  stock_array=$all_stock_list.keys[200,200]
-#	generate_will_buy_year(strategy,symbol,2013)
+  stock_array=$all_stock_list.keys[1..1000]
+	#generate_single_signal_will_buy_year(strategy,symbol,2013)
   batch_handle_single_signal_buy(strategy,stock_array)
 end

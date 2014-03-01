@@ -33,8 +33,11 @@ if File.exists?(double_signal_record)
       File.read(double_signal_record).split("\n").each do |line|
       	buy_count+=1      
       	result=line.split("#")
-      	true_count+=1 if result[2]=="true"
-      	false_count+=1 if result[2]=="false"      
+      	#true_count+=1 if result[2]=="true"
+      	#false_count+=1 if result[2]=="false"     
+      	true_count+=1 if result[4].to_f>0
+      	false_count+=1 if result[4].to_f<=0  
+
       end
        return [symbol,true_count+false_count,true_count,false_count,(true_count.to_f/(true_count+false_count).to_f).round(2)]
 	end
@@ -55,6 +58,14 @@ def batch_report_double_signal(strategy,symbol_array)
 	  print report.to_s+"\n"
     end
 
+    total_report=[0,0,0,0]
+    report_array.each do |report|
+     total_report[0]+=report[1]
+     total_report[1]+=report[2]
+     total_report[2]+=report[3]
+    end
+    total_report[3]=((total_report[1].to_f)/total_report[0]).round(2)
+    puts total_report
     return report_array
 end
 

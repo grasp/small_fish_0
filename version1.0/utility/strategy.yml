@@ -13,10 +13,10 @@ hundun_1:
   statistic: "statistic"
   start_date: "2000-01-01"
   end_date: "2012-12-30"
-  win_expect: "percent_15_num_2_days"
+  win_expect: "percent_30_num_2_days"
   count_freq: "count_5_percent_95"
   lost_probability: "count_3_percent_80"
-  single_win_freq:  "count_5_percent_70"
+  single_win_freq:  "count_5_percent_80"
   single_lost_freq:  "count_5_percent_85"
   limited_win_signal: 6
   triple_filter: "count_10_percent_51"
