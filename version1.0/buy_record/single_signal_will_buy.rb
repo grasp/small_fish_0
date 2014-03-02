@@ -32,8 +32,11 @@ def generate_single_signal_buy_record(strategy,symbol,date,today_signal_array,ye
 
 
  #第二步，载入统计文件
+
+     single_name="single_#{Strategy.send(strategy).win_expect}_#{Strategy.send(strategy).single_win_freq}_#{Strategy.send(strategy).single_lost_freq}.txt"
+   
     win_lost_statistic_path=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
-    Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,"base_statistic","single_signal_statistic.txt")
+    Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,"base_statistic",single_name)
 
   #产生统计文件
   unless File.exists?(win_lost_statistic_path)
@@ -76,9 +79,18 @@ def generate_single_signal_buy_record(strategy,symbol,date,today_signal_array,ye
 #puts "will_buy_array size=#{will_buy_array.size},will_lost_array.size=#{will_lost_array.size}"
 
 #信号太多，说明骗线多吗？避免风险，我们不做
-  return [date,0,new_statistic_hash] if will_buy_array.size>=Strategy.send(strategy).limited_win_signal
+if will_buy_array.size>=Strategy.send(strategy).limited_win_signal
+#  puts " give up when too much signal  count happen #{will_buy_array.size},limit #{Strategy.send(strategy).limited_win_signal}"
+ # return [date,0,new_statistic_hash] 
+  #这个限制没有必要加，尤其是高盈利概率的时候，丧失一些机会
+end
 
-  return [date,0,new_statistic_hash] if today_signal_array[0]=="false"
+if today_signal_array[0]=="false"
+ # puts " give up as today_signal_array[0]==false "
+  #return [date,0,new_statistic_hash] 
+  #这个也暂时不要看看？上次统计表现良好
+end
+
 
    lost_happen_count=0
    today_signal_array.each_index do |index|
@@ -128,23 +140,28 @@ def generate_single_signal_will_buy_year(strategy,symbol,year)
 	 buy_record=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
     Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,Strategy.send(strategy).count_freq,"buy_record")
 
-
-    buy_list=File.expand_path("./single_signal_buy_list.txt",buy_record)
+    single_name="single_#{Strategy.send(strategy).win_expect}_#{Strategy.send(strategy).single_win_freq}_#{Strategy.send(strategy).single_lost_freq}.txt"
+    buy_list=File.expand_path(single_name,buy_record)
   
     unless File.exists?(buy_record)
        initialize_singl_stock_folder(strategy,symbol)
     end
 
   #check statistic  file
+  single_name="single_#{Strategy.send(strategy).win_expect}_#{Strategy.send(strategy).single_win_freq}_#{Strategy.send(strategy).single_lost_freq}.txt"
+
   win_lost_statistic_path=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
-    Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,"base_statistic","single_signal_statistic.txt")
+    Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,"base_statistic",single_name)
 
   #产生统计文件
-  unless File.exists?(win_lost_statistic_path)
+  #unless File.exists?(win_lost_statistic_path)
     generate_single_signal_statistic(strategy,symbol)
-  end
+  #end
   #如果还没有统计文件，就可以放弃了
-  return unless File.exists?(win_lost_statistic_path)
+  unless File.exists?(win_lost_statistic_path)
+    puts "not exists #{win_lost_statistic_path}"
+   return 
+  end
 
    signal_file=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).signal_path,"#{symbol}.txt")
    raw_signal_hash=Hash.new
@@ -169,8 +186,8 @@ def generate_single_signal_will_buy_year(strategy,symbol,year)
   #print price_array
 
  #第二步，载入统计文件
-    win_lost_statistic_path=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
-    Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,"base_statistic","single_signal_statistic.txt")
+   # win_lost_statistic_path=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
+   # Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,"base_statistic","single_signal_statistic.txt")
 
    statistic_hash=Hash.new
    File.read(win_lost_statistic_path).split("\n").each do |line|
@@ -252,8 +269,8 @@ def generate_single_signal_will_buy_year(strategy,symbol,year)
 end
 end
 end
-
-
+#puts "I am here 1 with buy_list=#{buy_list}"
+ #buy_list_file <<"test"
  buy_list_file.close
 
 end
@@ -261,7 +278,7 @@ end
 
 def batch_handle_single_signal_buy(strategy,stock_array)
   stock_array.each do |symbol|
-   # puts "#{symbol}================================="
+    puts "#{symbol}================================="
     generate_single_signal_will_buy_year(strategy,symbol,2013)
   end
 end
@@ -282,7 +299,7 @@ if $0==__FILE__
 
 	#generate_single_signal_buy_record(strategy,symbol)
 	#generate_single_signal_statistic(strategy,symbol)
-  stock_array=$all_stock_list.keys[1..1000]
+  stock_array=$all_stock_list.keys[1..2]
 	#generate_single_signal_will_buy_year(strategy,symbol,2013)
   batch_handle_single_signal_buy(strategy,stock_array)
 end

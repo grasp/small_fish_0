@@ -1,5 +1,5 @@
 hundun_1:
-  root_path: "e:/version1.0"
+  root_path: "e:/version1.1"
   #root_path: "e:/feishu_A"
   log_name: "log/feishu.log"
   raw_data: "raw_data"
@@ -12,11 +12,11 @@ hundun_1:
   win_lost_path: "win_lost"
   statistic: "statistic"
   start_date: "2000-01-01"
-  end_date: "2012-12-30"
+  end_date: "2014-02-27"
   win_expect: "percent_30_num_2_days"
   count_freq: "count_5_percent_95"
   lost_probability: "count_3_percent_80"
-  single_win_freq:  "count_5_percent_80"
+  single_win_freq:  "count_3_percent_80"
   single_lost_freq:  "count_5_percent_85"
   limited_win_signal: 6
   triple_filter: "count_10_percent_51"

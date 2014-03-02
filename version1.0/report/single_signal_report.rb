@@ -16,11 +16,12 @@ def report_single_signal_single_symbol(strategy,symbol)
 
 
 #如果没有买卖历史记录， 那就产生一个(问题是本来就没有的呢？)
-single_signal_record=File.expand_path("./single_signal_buy_list.txt",buy_record_folder)
+single_name="single_#{Strategy.send(strategy).win_expect}_#{Strategy.send(strategy).single_win_freq}_#{Strategy.send(strategy).single_lost_freq}.txt"
+single_signal_record=File.expand_path(single_name,buy_record_folder)
 
-#unless File.exists?(single_signal_record)
+unless File.exists?(single_signal_record)
 	 generate_single_signal_will_buy_year(strategy,symbol,2013)
-#end
+end
 
 if File.exists?(single_signal_record)
 	if File.stat(single_signal_record).size==0
@@ -33,7 +34,7 @@ if File.exists?(single_signal_record)
       File.read(single_signal_record).split("\n").each do |line|
       	buy_count+=1      
       	result=line.split("#")
-      	if result[3].to_f>=0
+      	if result[3].to_f>=2
       	  true_count+=1 
         else
       	  false_count+=1# if result[4].to_f<=0   
@@ -70,11 +71,75 @@ def batch_report_single_signal(strategy,symbol_array)
     puts total_report
 end
 
+def batch_report_on_date(strategy,symbol_array)
+
+date_hash=Hash.new
+
+
+    date_array=[0,0,0,0]
+
+    total_date_array=[]
+
+	symbol_array.each do |symbol|
+
+    buy_record_folder=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
+    Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,Strategy.send(strategy).count_freq,"buy_record")
+    single_name="single_#{Strategy.send(strategy).win_expect}_#{Strategy.send(strategy).single_win_freq}_#{Strategy.send(strategy).single_lost_freq}.txt"
+    
+    single_signal_record=File.expand_path(single_name,buy_record_folder)
+    if File.exists?(single_signal_record) && File.stat(single_signal_record).size>0
+      File.read(single_signal_record).split("\n").each do |line|
+       total_date_array<<line.to_s+"\n"
+      end
+    end 
+end
+total_date_array.each do |line|
+  result=line.split("#")
+
+  if date_hash.has_key?(result[0])
+      date_array=date_hash[result[0]]
+  else
+      date_array=[0,0,0,0]
+  end
+  
+ date_array[0]+=1
+
+  if result[3].to_f>0
+    date_array[1]+=1
+  else
+    date_array[2]+=1
+  end
+date_hash[result[0]]=date_array
+end
+date_hash.each do |date,date_array|
+  date_array[3]=(date_array[1].to_f/date_array[0].to_f).round(2) unless date_array[0]==0
+end
+
+print "date_hash size=#{date_hash.size}\n"
+
+total_date=date_hash.size
+fail_date=0
+win_date=0
+ date_hash.sort_by {|_key,_value| _key}.each do |key,value|
+
+  if value[3]<1
+    fail_date+=1
+   puts "#{key}=#{value}<<<<<" 
+ else
+  win_date+=1
+     puts "#{key}=#{value}" 
+ end
+  end
+print "fail date=#{fail_date},win_date=#{win_date}"
+end
+
 if $0==__FILE__
 	include StockUtility
 	include StockBuyRecord
     start=Time.now
+    strategy="hundun_1"
     batch_report_single_signal("hundun_1",$all_stock_list.keys[0..2470])
+   # batch_report_on_date(strategy,$all_stock_list.keys[0..2470])
 	#print report_double_signal_single_symbol("hundun_1","000040.sz")
 	puts "cost time=#{Time.now-start}"
 

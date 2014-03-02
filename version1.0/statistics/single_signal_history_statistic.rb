@@ -114,11 +114,13 @@ statistic_array[3]=(total_statistic[key][1].to_f/(total_statistic[key][0])).roun
 end
 
 #产生base statistic
+
+single_name="single_#{Strategy.send(strategy).win_expect}_#{Strategy.send(strategy).single_win_freq}_#{Strategy.send(strategy).single_lost_freq}.txt"
+
  single_statistic_file=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
-      Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,"base_statistic","single_signal_statistic.txt")
+      Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,"base_statistic",single_name)
 
      target_file=File.new(single_statistic_file,"w+")
-  # puts "single_statistic_file=#{single_statistic_file}"
 
       #total_statistic.sort_by
  total_statistic.sort_by {|_key,_value| _value[3]}.reverse.each do |key,value|
