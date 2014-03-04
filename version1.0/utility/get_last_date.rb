@@ -5,10 +5,12 @@ def get_last_date_of_raw_date(strategy,symbol)
 	history_data_path=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).raw_data,Strategy.send(strategy).history_data,"#{symbol}.txt")
 	#print history_data_path
 	return nil unless  File.exists?(history_data_path)
-  return nil if File.stat(history_data_path).size==0
+    return nil if File.stat(history_data_path).size==0
 	#读取最后5行，防止漏掉有效数据
     last_array=[]
-    IO.readlines(history_data_path)[-5..-1].each do |daily_k|
+    last_five_line=IO.readlines(history_data_path)[-5..-1]
+    return nil if last_five_line.nil?
+    last_five_line.each do |daily_k|
      last_array<<daily_k unless daily_k.nil?  && daily_k.length>5
     end
    # print last_array

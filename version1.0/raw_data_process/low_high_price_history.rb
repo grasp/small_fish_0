@@ -14,7 +14,7 @@ def low_high_price_analysis(price_array)
    high_price_hash=Hash.new
 
    price_array.each_index do |daily_k_index|
-     date=price_array[daily_k_index][0]
+   date=price_array[daily_k_index][0]
    #  puts "date=#{date}"
      result=low_high_price_array_on_backdays(price_array,daily_k_index)
      low_price_hash[date]=result[0]
