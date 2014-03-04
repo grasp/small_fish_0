@@ -25,6 +25,13 @@ ActionMailer::Base.smtp_settings = {
 
 ActionMailer::Base.delivery_method = :smtp
 
+result=`ipconfig`
+if result.match("10.69.70.34")
+    ENV['http_proxy']="http://10.140.19.49:808"
+    ENV['https_proxy']="https://10.140.19.49:808"
+end
+
+
 module StockUtility
 
 #发送email
