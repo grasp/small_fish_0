@@ -72,7 +72,7 @@ if $0==__FILE__
   #download_all_history
   strategy="hundun_1"
  init_strategy_name(strategy)
-  download_all_history_on_day("2014-01-27")
+ download_all_history_on_day("2014-01-27")
 # download_history("sz000009", 20140127,20140127)
 
 end

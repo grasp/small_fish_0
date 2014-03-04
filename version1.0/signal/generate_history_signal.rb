@@ -34,7 +34,8 @@ def generate_history_signal(strategy,symbol)
 
       #倒序？？ 为什么？？？
       
-      full_price_array=price_hash.to_a.reverse
+    #  full_price_array=price_hash.to_a.reverse
+    full_price_array=price_hash.to_a  #改动的目的是想让最新数据在最后一行
 
     
      full_macd_array=processed_data_array[0].to_a
@@ -93,8 +94,8 @@ end
 if $0==__FILE__
   include StockSignal
    # test_save_all_signal
-  # generate_history_signal("hundun_1","000004.sz")
-  strategy="hundun_1"
-  batch_generate_history_signal(strategy)
+   generate_history_signal("hundun_1","000005.sz")
+ # strategy="hundun_1"
+#  batch_generate_history_signal(strategy)
  end
 

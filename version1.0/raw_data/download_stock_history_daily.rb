@@ -2,7 +2,7 @@ require File.expand_path("../../utility/utility.rb",__FILE__)
 require File.expand_path("../../utility/stock_init.rb",__FILE__)
 
 module StockRawData
-  include StockUtility
+include StockUtility
 
 #下载yahoo的历史数据到历史文件夹
 def download_yahoo_history(strategy,symbol)
@@ -38,9 +38,7 @@ def batch_download_yahoo_history(strategy)
    start=Time.now
    empty_symbol=[]
    $all_stock_list.keys.each do |symbol|
-
       initialize_singl_stock_folder(strategy,symbol)
-
       target_folder=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).raw_data,Strategy.send(strategy).history_data)
       symbol_file_name=File.expand_path("#{symbol}.txt",target_folder)
 
