@@ -49,10 +49,11 @@ if raw_process_gap_date_array.size>raw_data_gap_date_array.size
     	back_day=0
     	price_array.each_index do |index|
     	# print "#{price_array[index][0]},#{append_date[0]}\n"	
-    	if price_array[index][0]==append_date[0]
-    		puts "index=#{index}"
-    		back_day==index
-    	end
+       	if price_array[index][0]==append_date[0]
+    	    	puts "index=#{index}"
+    	    	back_day=index
+      	end
+      end
           low_high=low_high_price_array_on_backdays(price_array,back_day)
           low_price_array=low_high[0]
           high_price_array=low_high[1]
@@ -61,14 +62,14 @@ if raw_process_gap_date_array.size>raw_data_gap_date_array.size
           volume_array=generate_volume_array_on_backday(price_array,back_day)
 
           date=price_array[back_day][0]
-
+puts "date=#{date}"
           append_file<<date.to_s
           append_file<<"#"+result_macd_array.to_s
           append_file<<"#"+low_price_array.to_s
           append_file<<"#"+high_price_array.to_s
           append_file<<"#"+volume_array.to_s     
           append_file<<"\n"
-        end
+       
     end
 
    # print price_array
