@@ -251,6 +251,15 @@ def batch_handle_single_signal_buy(strategy,stock_array,date)
 	report_array=[]
 	count =0 
    stock_array.each do |symbol|
+
+   buy_record_folder=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
+    Strategy.send(strategy).end_date, Strategy.send(strategy).win_expect, Strategy.send(strategy).count_freq,"buy_record")
+
+    unless File.exists?(buy_record_folder)
+      initialize_singl_stock_folder(strategy,symbol)
+    end
+
+
     puts "#{symbol},#{count}"
     count+=1
     result=generate_single_signal_will_buy_date(strategy,symbol,date)
@@ -292,6 +301,6 @@ if $0==__FILE__
   stock_array=$all_stock_list.keys[0..2041]
 	#generate_single_signal_will_buy_year(strategy,symbol,2013)
 	#generate_single_signal_will_buy_date(strategy,symbol,"2014-02-28")
-	print batch_handle_single_signal_buy(strategy,stock_array,"2014-03-03")
+	print batch_handle_single_signal_buy(strategy,stock_array,"2014-03-07")
  # batch_handle_single_signal_buy(strategy,stock_array)
 end
