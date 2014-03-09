@@ -20,10 +20,14 @@ end
 def get_last_date_of_raw_process_date(strategy,symbol)
 	history_data_path=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).raw_data_process,"#{symbol}.txt")
 	return nil unless File.exists?(history_data_path)
+
 	#读取最后5行，防止漏掉有效数据
     last_array=[]
-    IO.readlines(history_data_path)[-5..-1].each do |daily_k|
-     last_array<<daily_k unless daily_k.nil?  && daily_k.length>5
+    last_five_line=IO.readlines(history_data_path)[-5..-1]
+    return nil if last_five_line.nil?
+    
+    last_five_line.each do |daily_k|
+      last_array<<daily_k unless daily_k.nil?  && daily_k.length>5
     end
     return last_array.last.split("#")[0]
 end
@@ -33,7 +37,9 @@ def get_last_date_of_signal(strategy,symbol)
 	return nil unless File.exists?(history_data_path)
 	#读取最后5行，防止漏掉有效数据
     last_array=[]
-    IO.readlines(history_data_path)[-5..-1].each do |daily_k|
+    last_five_line=IO.readlines(history_data_path)[-5..-1]
+       return nil if last_five_line.nil?
+    last_five_line.each do |daily_k|
       last_array<<daily_k unless daily_k.nil?  && daily_k.length>5
     end
     return last_array.last.split("#")[0]
@@ -44,9 +50,12 @@ def get_last_date_of_win_lost(strategy,symbol)
 	return nil unless File.exists?(history_data_path)
 	#读取最后5行，防止漏掉有效数据
     last_array=[]
-    IO.readlines(history_data_path)[-5..-1].each do |daily_k|
+    last_five_line=IO.readlines(history_data_path)[-5..-1]
+      return nil if last_five_line.nil?
+    last_five_line.each do |daily_k|
      last_array<<daily_k unless daily_k.nil?  && daily_k.length>5
     end
+
    # print last_array
     return last_array.last.split("#")[0]
 end

@@ -5,7 +5,7 @@ require File.expand_path("../../utility/read_daily_price_volume.rb",__FILE__)
 module StockWinLost
   include StockUtility
 #判断number day内将会涨跌
-def generate_win_lost_on_backday(price_array,back_day,percent, number_day)
+def generate_win_lost_on_backday(price_array,back_day,percent,number_day)
 
   #最后几天统计不能算，因为此时我们还不能知道是否盈利或者亏损，只能计算到倒数几天，因此原来的计算有误，需要重新计算
 	raise if back_day<number_day.to_i
@@ -27,7 +27,7 @@ def generate_win_lost_on_backday(price_array,back_day,percent, number_day)
 1.upto(number_day.to_i).each do |i| 
  #puts "price_array[back_day-i][1][3].to_f=#{price_array[back_day-i]}"
  #注意是除以1000，因为我们的比例已经放大了10倍
- true_false||=(((price_array[back_day-i][1][3].to_f-today_price.to_f)/today_price.to_f)>=(percent.to_f/1000))
+ true_false ||= (((price_array[back_day-i][1][3].to_f-today_price.to_f)/today_price.to_f)>=(percent.to_f/1000))
 end
 
 return true_false
@@ -109,8 +109,8 @@ if $0==__FILE__
 
 #target_folder=File.expand_path("./percent_#{profit_percent}_num_#{during_days}_days/win_lost_history",daily_k_path)
 #genereate_all_symbol_win_lost(target_folder,profit_percent,during_days.to_i)
-#generate_all_zuhe(strategy_name)
-percent=15
-number_day=2
-generate_win_lost(stragey,"000004.sz")
+generate_all_zuhe(strategy_name)
+#percent=15
+#number_day=2
+#generate_win_lost(stragey,"000004.sz")
 end

@@ -129,8 +129,15 @@ end
 
 def judge_full_macd_signal(full_macd_array, back_day,total_size)
     # print "#{full_macd_array.size},#{back_day}"
-    back_day=back_day-1 if back_day==total_size-1
-    judge_macd_signal(full_macd_array[back_day][1],full_macd_array[back_day+1][1],back_day)
+
+   # back_day=back_day-1 if back_day==total_size-1
+    #puts "back_day=#{back_day},#{full_macd_array[back_day]},total_size=#{total_size}"
+    return if full_macd_array[back_day].nil?
+    if back_day==total_size-1
+     judge_macd_signal(full_macd_array[back_day][1],full_macd_array[back_day][1],back_day)
+    else
+    judge_macd_signal(full_macd_array[back_day][1],full_macd_array[back_day-1][1],back_day)
+    end
 
 end
 end

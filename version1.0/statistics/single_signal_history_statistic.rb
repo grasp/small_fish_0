@@ -48,6 +48,7 @@ def generate_single_signal_statistic(strategy,symbol)
 
   #产生信号Hash
    signal_array=File.read(signal_file).split("\n")
+   #print signal_array
    first_line=signal_array.shift(1)[0]
 
    return if first_line.nil?
@@ -56,13 +57,18 @@ def generate_single_signal_statistic(strategy,symbol)
 
    #puts signal_keys
    signal_array.each do |line|
+    next if line.nil?
     result=line.split("#")
+
+    next if result.size==0
+    #print "#{result}\n" 
     temp=JSON.parse(result[1])
 
    temp.each_index do |index|
       temp[index]=temp[index].to_s
     end
-  if result[0]<=Strategy.send(strategy).end_date  #只统计某个时间段的
+
+  if result[0]<=Strategy.send(strategy).end_date && result[0]>=Strategy.send(strategy).start_date   #只统计某个时间段的
     signal_hash[result[0]]=temp
   end
    end
@@ -70,11 +76,17 @@ def generate_single_signal_statistic(strategy,symbol)
    win_statstic_hash=Hash.new{0}
    lost_statstic_hash=Hash.new{0}
    signal_hash_array=signal_hash.to_a.reverse
+  #print signal_hash_array
    signal_hash_array.each_index do |s_index|
    next if s_index==0
+
    date=signal_hash_array[s_index][0]
+
    array1=signal_hash_array[s_index][1]
    array2=signal_hash_array[s_index-1][1]
+#print "array1=#{array1},date=#{signal_hash_array[s_index][0]} \n"
+#puts "=============================="
+#print "array2=#{array2},date=#{signal_hash_array[s_index-1][0]}  \n"
 
   array1.each_index do |index|
   if array1[index] !=array2[index]
@@ -146,7 +158,7 @@ if $0==__FILE__
     include StockWinLost
 	strategy="hundun_1"
 	symbol="000005.sz"
-
+   start = Time.now
    base_statistic_folder=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
       Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,"base_statistic")
 
@@ -154,6 +166,10 @@ if $0==__FILE__
    	initialize_singl_stock_folder(strategy,symbol)
    end
 
-   generate_single_signal_statistic(strategy,symbol)
+   #generate_single_signal_statistic(strategy,symbol)
+
+   batch_generate_single_signal_statistic(strategy)
+
+   puts "cost time = #{Time.now - start}"
 
 end

@@ -12,7 +12,8 @@ module StockSignal
 def generate_volume_signal_on_backday(strategy,full_price_array,volume_array,back_day)
      
 	 volume_signal=Hash.new
-
+    # return if back_day==volume_array.size
+    #print "back_day=#{back_day}"
     # price_hash=get_price_hash_from_history(strategy,symbol)
     # full_price_array=price_hash.to_a
 
@@ -62,6 +63,8 @@ def generate_volume_signal_on_backday(strategy,full_price_array,volume_array,bac
 end
 
 def generate_volume_sigmal_by_full(strategy,full_price_array,full_volume_array,back_day)
+  #  print "1back_day=#{back_day},full_volume_array size=#{full_volume_array.size}"
+    return if back_day >= full_volume_array.size
      volume_array=full_volume_array[back_day][1]
      return generate_volume_signal_on_backday(strategy,full_price_array,volume_array,back_day)
 end
@@ -81,13 +84,13 @@ def generate_full_volume_signal(strategy,symbol)
 
      full_volume_array=processed_data_array[3].to_a
 
-     print  full_volume_array.size
+    # print  full_volume_array.size
 
     # raise
     # print "back day 0 ="+full_low_price_array[0][0].to_s
      total_size=full_volume_array.size
 
-     full_price_array.each_index do |index|
+     full_volume_array.each_index do |index|
      #	next if index==total_size-1
      	date=full_price_array[index][0]      
         signal_hash=generate_volume_sigmal_by_full(strategy,full_price_array,full_volume_array,index)

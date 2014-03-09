@@ -61,13 +61,20 @@ end
    
    #新浪的量和yahoo的量相差100，新浪以手为单位
    sina_array.each do |daily_k|
+     #print "#{daily_k} \n"
      new_array=[]
      result=daily_k.split(",")
-    # print "#{result}\n"
+     temp=result[4]
+     result[4]=result[3]
+     result[3]=temp
+
+     # print "#{result}\n"
      new_array<<symbol
      new_array+=result     
      new_array[new_array.size-1]=new_array[new_array.size-1].to_i*100
+     
      new_array<<result[4] #为了和yahoo保持一致
+     #print "new_array=#{new_array}"
      return_array<<new_array
   end
 
@@ -98,8 +105,8 @@ if $0==__FILE__
 	include StockUtility
 	strategy_file=File.expand_path("../../utility/strategy.yml",__FILE__)
 	strategy="hundun_1"
-	symbol="000008.sz"
-  #append_raw_data(strategy,symbol)
+	symbol="000005.sz"
+   #append_raw_data(strategy,symbol)
   start=Time.now
   symbol_array=$all_stock_list.keys[0..2470]
   batch_append_raw_data(strategy,symbol_array)

@@ -7,9 +7,14 @@ module StockSignal
 
 def low_price_signal(full_low_price_array,full_price_array,back_day)
 	low_price_signal_hash=Hash.new
-
+    #puts "low back_day=#{back_day},#{full_low_price_array.size}=#{full_price_array.size}"
+    if back_day >= full_low_price_array.size
+    return 
+    end
 	low_price_array=full_low_price_array[back_day]
 	price_array=full_price_array[back_day]
+
+    #puts "back_day=#{back_day},#{full_low_price_array.size},#{full_price_array.size}"
 	#print low_price_array.to_s+"\n"
 	#print "price_array="+price_array.to_s+"\n"
     low_price_signal_hash["lowest_2_day"]= (low_price_array[1][1].to_f >= price_array[1][3].to_f)
@@ -61,13 +66,19 @@ def generate_all_low_price_signal(strategy,symbol)
     # print "back day 0 ="+full_low_price_array[0][0].to_s
      total_size=full_low_price_array.size
 
+     #print full_low_price_array[0..10]
+    # puts "  "
+    # print full_price_array[0..10]
+
      full_low_price_array.each_index do |index|
      	#  next if index==total_size-1
      	 # print "index=#{index}"
      	#puts "index#{index}="+full_low_price_array[index].to_s
      	date=full_low_price_array[index][0]
-        #puts "date=#{date}"
+  
+       # puts "date=#{date}"
         signal_hash=low_price_signal(full_low_price_array,full_price_array,index)
+       # print signal_hash
         save_hash[date]=signal_hash
      end
 #puts save_hash
@@ -78,5 +89,5 @@ end
 if $0==__FILE__
   include StockSignal
   strategy="hundun_1"
-  generate_all_low_price_signal(strategy,"000004.sz")
+  generate_all_low_price_signal(strategy,"000981.sz")
 end 

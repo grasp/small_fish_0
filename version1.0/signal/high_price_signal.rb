@@ -8,6 +8,8 @@ module StockSignal
 def high_price_signal(full_high_price_array,full_price_array,back_day)
 	high_price_signal_hash=Hash.new
 
+   # puts "back_day=#{back_day},#{full_high_price_array.size},#{full_price_array.size}"
+    return if back_day >= full_high_price_array.size
 	high_price_array=full_high_price_array[back_day]
 	price_array=full_price_array[back_day]
     #raise  if  high_price_array[1].nil?
@@ -55,6 +57,7 @@ def generate_all_high_price_signal(strategy,symbol)
 
      #获取完成的价格hash
      price_hash=get_price_hash_from_history(strategy,symbol)
+     #full_price_array=price_hash.to_a.reverse
      full_price_array=price_hash.to_a.reverse
 
      total_size=price_hash.size
@@ -62,10 +65,16 @@ def generate_all_high_price_signal(strategy,symbol)
      full_high_price_array=processed_data_array[2].to_a
      #puts full_high_price_array.size
 
-     full_price_array.each_index do |index|
+     #要保证日子对齐
+    # print full_high_price_array[0..10]
+    # puts "   "
+    # print full_price_array[0..10]
+    #用这种办法有一个重要的前提是日子要对齐，full_high_price_array，full_price_array，要按照顺序下去
+     full_high_price_array.each_index do |index|
      	
        # next if index==total_size-1
-     	date=full_price_array[index][0]      
+     	date=full_price_array[index][0]   
+        #puts "#{date}"   
         signal_hash=high_price_signal(full_high_price_array,full_price_array,index)
         full_high_signal_hash[date]=signal_hash
      end
@@ -77,5 +86,5 @@ end
 if $0==__FILE__
     include StockSignal
    strategy="hundun_1"
-   generate_all_high_price_signal(strategy,"000004.sz")
+   generate_all_high_price_signal(strategy,"000981.sz")
 end
