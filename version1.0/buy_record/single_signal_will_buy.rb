@@ -105,7 +105,7 @@ end
 
   if lost_happen_count>0
   	#print "lost_happen_count=#{lost_happen_count} on #{date},#{win_lost_flag}\n"
-    return [date,0,new_statistic_hash]
+   # return [date,0,new_statistic_hash]
   end
 
 
