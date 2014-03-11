@@ -302,7 +302,7 @@ if $0==__FILE__
   stock_array=$all_stock_list.keys[0..2041]
 	#generate_single_signal_will_buy_year(strategy,symbol,2013)
 	#generate_single_signal_will_buy_date(strategy,symbol,"2014-02-28")
-	print batch_handle_single_signal_buy(strategy,stock_array,"2014-03-05")
+	print batch_handle_single_signal_buy(strategy,stock_array,"2014-03-6")
  # batch_handle_single_signal_buy(strategy,stock_array)
 
  puts "cost #{Time.now - start}"

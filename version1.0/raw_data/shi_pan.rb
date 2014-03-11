@@ -94,8 +94,9 @@ end
 
 
 def batch_append_raw_data(strategy,symbol_array)
+  count = 0
  symbol_array.each do |symbol|
-   puts "symbol=#{symbol}"
+   puts "symbol=#{symbol},count =#{count}"
    append_raw_data(strategy,symbol)
  end
 
