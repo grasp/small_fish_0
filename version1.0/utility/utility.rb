@@ -7,21 +7,21 @@ require 'settingslogic'
       source File.expand_path('../strategy.yml',__FILE__)
  end
 
- class Notifier < ActionMailer::Base
+class Notifier < ActionMailer::Base
   def email(mailto,subject,ebody)
     mail(:to=>mailto,:from=>"hunter.hu@nsn.com",:subject=> subject,:body=>ebody)
   end
- end
- 
+end
+
+#reference 6.2 of http://guides.rubyonrails.org/action_mailer_basics.html
 ActionMailer::Base.smtp_settings = {
-  :user_name => "w090.mark",
-  :password => "999317",
-  :domain => "w090.com",
-  :address => "smtp.sendgrid.net",
-  :port => 587,
-  :authentication => :plain,
-  :enable_starttls_auto => true
-}
+  address:              'smtp.gmail.com',
+  port:                 587,
+  domain:               'w090.com',
+  user_name:            'mark.xiansheng',
+  password:             'tianrenheyi123#',
+  authentication:       'plain',
+  enable_starttls_auto: true  }
 
 ActionMailer::Base.delivery_method = :smtp
 
@@ -35,8 +35,8 @@ end
 module StockUtility
 
 #发送email
-def sent_email(address,title,body)
-	Notifier.email(address,title,body).deliver!
+def email_notify(strategy,title,body)
+  Notifier.email(Strategy.send(strategy).email_receiver,title,body).deliver!
 end
 
 
@@ -46,4 +46,10 @@ def convert_yahoo_symbol_to_sina(yahoo_symbol)
    return sina_id
 end
 
+end
+
+if $0==__FILE__
+  include StockUtility
+  strategy="hundun_1"
+  email_notify(strategy,"stock notify email: test","This is just a test of email")
 end

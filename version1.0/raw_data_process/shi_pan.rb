@@ -87,7 +87,7 @@ end
 
 end
 
-def batch_append_raw_data(strategy,symbol_array)
+def batch_append_raw_data_process(strategy,symbol_array)
   count=0
    symbol_array.each do |symbol|
 

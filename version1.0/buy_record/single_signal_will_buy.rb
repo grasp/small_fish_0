@@ -10,15 +10,14 @@ module StockBuyRecord
 #***********************************************************************************#
 def generate_single_signal_buy_record(strategy,symbol,date,today_signal_array,yesterday_signal_array,win_lost_flag,statistic_hash)
 
-  new_statistic_hash=statistic_hash
+    new_statistic_hash=statistic_hash
 
     #buy_list_done_txt=File.join()
     buy_list=File.join(Strategy.send(strategy).root_path,symbol,Strategy.send(strategy).statistic,\
     Strategy.send(strategy).end_date,Strategy.send(strategy).win_expect,Strategy.send(strategy).count_freq,"buy_record","single_signal_buy_list.txt")
   
    raw_signal_hash=Hash.new
-
-  # if not File.exists?(buy_list)
+   # if not File.exists?(buy_list)
 
    win_expect=Strategy.send(strategy).win_expect
 
@@ -210,8 +209,8 @@ def generate_single_signal_will_buy_year(strategy,symbol,year)
 
    12.downto(1).each do |j|
    30.downto(1).each do |i|
-      next unless Date.valid_date?(2013, j, -i)
-      date = Date.new(2013, j, -i)
+      next unless Date.valid_date?(2014, j, -i)
+      date = Date.new(2014, j, -i)
       unless (date.wday==6 || date.wday==0)
       next if raw_signal_hash[date.to_s].nil?  
        today_signal_array=[]
@@ -229,8 +228,7 @@ def generate_single_signal_will_buy_year(strategy,symbol,year)
       today_price=price_array[today_index][1]
       number_day=win_expect.split("_")[3].to_i
      # print "number day=#{today_index+number_day} \n"
-     unless  today_index+number_day>=price_array.size
-      
+     unless  today_index+number_day>=price_array.size      
       future_price=price_array[today_index+number_day][1]  #number_day
     else
       future_price=price_array[today_index][1]  #number_day
@@ -258,13 +256,12 @@ def generate_single_signal_will_buy_year(strategy,symbol,year)
      report_line << "#" +(((future_price[3].to_f-today_price[3].to_f)/today_price[3].to_f)*100).round(2).to_s + "#" +(((future_price[1].to_f-today_price[3].to_f)/today_price[3].to_f)*100).round(2).to_s 
      #report_line <<"#" +(( (future_price[3].to_f+(future_price[1].to_f-today_price[3].to_f)/2)/today_price[3].to_f)*100).round(2).to_s
      report_line <<"\n"
-   #  report_line<<"#"+"#{today_price.to_s}"+"#{future_price.to_s}"+ "\n"
+     #report_line<<"#"+"#{today_price.to_s}"+"#{future_price.to_s}"+ "\n"
      if result[1]>0 
-     #  print "#{symbol}-#{report_line}"
+       #  print "#{symbol}-#{report_line}"
        buy_list_file << report_line   
      end
      end
-
    end
 end
 end
@@ -279,7 +276,7 @@ end
 def batch_handle_single_signal_buy(strategy,stock_array)
   stock_array.each do |symbol|
     puts "#{symbol}================================="
-    generate_single_signal_will_buy_year(strategy,symbol,2013)
+    generate_single_signal_will_buy_year(strategy,symbol,2014)
   end
 end
 
@@ -299,7 +296,7 @@ if $0==__FILE__
 
 	#generate_single_signal_buy_record(strategy,symbol)
 	#generate_single_signal_statistic(strategy,symbol)
-  stock_array=$all_stock_list.keys[1..2]
+  stock_array=$all_stock_list.keys[1..2040]
 	#generate_single_signal_will_buy_year(strategy,symbol,2013)
   batch_handle_single_signal_buy(strategy,stock_array)
 end

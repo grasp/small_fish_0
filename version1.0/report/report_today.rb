@@ -6,13 +6,14 @@ require File.expand_path("../../signal/signal_shi_pan.rb",__FILE__)
 require File.expand_path("../../buy_record/single_signal_shi_pan.rb",__FILE__)
 
 include StockUtility
+include StockBuyRecord
 
-def need_update_or_not
+def need_update_or_not(strategy)
 	
 	time = Time.now
 	date=Date.today
 
-	$working_day_hash(date.to_s)
+	$working_day_hash[date.to_s]
 	test_symbol="000002.sz"
 	test_symbo2="600000.ss"
 
@@ -29,20 +30,20 @@ def need_update_or_not
 
 
 end
+
+def download_today_data(strategy)
+	 symbol_array=$all_stock_list.keys[0..2470]
+     batch_append_raw_data(strategy,symbol_array)
+end
+
 def report_today(strategy)
-
-	return if need_update_or_not==false
-
   symbol_array=$all_stock_list.keys[0..2470]
-  batch_append_raw_data(strategy,symbol_array)
-  batch_append_raw_data(strategy,symbol_array)
-  batch_append_signal(strategy,symbol_array)
-
-  
+ # batch_append_raw_data_process(strategy,symbol_array)
+ # batch_append_signal(strategy,symbol_array)
 
   #unless (date.wday==6 || date.wday==0)
-
-  batch_handle_single_signal_buy(strategy,stock_array,date)
+  date="2014-03-19"
+  batch_handle_single_signal_buy(strategy,symbol_array,date)
   
 
 end
@@ -50,7 +51,10 @@ end
 if $0==__FILE__
 	start = Time.now
 	strategy="hundun_1"
-   # report_today(strategy)
-    get_latest_date
+
+	#if need_update_or_not(strategy) == true
+    report_today(strategy)
+   # end
+   # get_latest_date
 	puts "cost Time #{Time.now - start }"
 end
