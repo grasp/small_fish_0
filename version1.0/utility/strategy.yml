@@ -1,5 +1,5 @@
 hundun_1:
-  root_path: "e:/version1.1"
+  root_path: "d:/version1.0"
   #root_path: "e:/feishu_A"
   log_name: "log/feishu.log"
   raw_data: "raw_data"

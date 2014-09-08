@@ -60,7 +60,7 @@ def batch_download_yahoo_history(strategy)
       end
 
       puts "counter=#{counter},symbol=#{symbol}" if (counter%2) == 0 
-      sleep 8
+      sleep 0.2
 
    end
     puts "empty counter=#{empty_counter},cost #{Time.now-start}"
